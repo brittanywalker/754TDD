@@ -1,2 +1,2 @@
 # 754TDD
-Assigment 3 - Test Driven Development
+Assignment 3 - Test Driven Development
