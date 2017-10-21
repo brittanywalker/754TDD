@@ -34,5 +34,23 @@
         </createTable>
 
         <addUniqueConstraint tableName="users" columnNames="email_address" constraintName="uq_users__email_address" deferrable="false" disabled="false" initiallyDeferred="false"/>
+
+
+    </changeSet>
+
+
+    <changeSet author="harry-jackson" id="addColumn">
+        <addColumn
+                   schemaName="public"
+                   tableName="users">
+            <column name="password" type="VARCHAR(100)">
+            </column>
+        </addColumn>
+        <addColumn
+                schemaName="public"
+                tableName="users">
+            <column name="role" type="VARCHAR(100)">
+            </column>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>
