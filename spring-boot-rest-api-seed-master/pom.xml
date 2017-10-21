@@ -169,6 +169,14 @@
             <version>${beanutils.version}</version>
         </dependency>
         <!-- End Utilities -->
+
+        <!-- Weka -->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-stable</artifactId>
+            <version>3.6.14</version>
+        </dependency>
+        <!-- End Weka -->
     </dependencies>
 
     <build>
