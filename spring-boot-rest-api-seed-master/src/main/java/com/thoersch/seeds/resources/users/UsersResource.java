@@ -46,6 +46,25 @@ public class UsersResource {
         return user;
     }
 
+    @GET
+    @Path("/email/{email}")
+    public User getUser(@PathParam("email") String email) {
+
+        List<User> userList = getUsers();
+        User user = null;
+        for (User u : userList){
+            if (u.getEmailAddress().equals(email)){
+                user = u;
+            }
+        }
+
+        if(user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        return user;
+    }
+
     @POST
     @Path("/login")
     public ResponseEntity authUser(@Valid UserLogin userLogin) {
