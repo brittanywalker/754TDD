@@ -76,14 +76,12 @@ public class UsersResource {
         for (User u : userList){
             if (u.getEmailAddress().equals(userLogin.getEmailAddress())){
                 if (u.getPassword().equals(userLogin.getPassword())){
-                    return new ResponseEntity<>(HttpStatus.ACCEPTED);
+                    return new ResponseEntity<>("UserID: " + u.getId() + ", Role: " + u.getRole(),HttpStatus.ACCEPTED);
                 }
             }
         }
 
-        throw new ResourceUnauthorizedException();
-
-//        return new ResponseEntity<String>("Unauthorised", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("Unauthorised", HttpStatus.UNAUTHORIZED);
     }
 
 
@@ -101,5 +99,5 @@ public class UsersResource {
 
 @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 final class ResourceUnauthorizedException extends RuntimeException {
-    
+
 }
