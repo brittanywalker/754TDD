@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -67,18 +69,21 @@ public class UsersResource {
 
     @POST
     @Path("/login")
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity authUser(@Valid UserLogin userLogin) {
 
         List<User> userList = getUsers();
         for (User u : userList){
             if (u.getEmailAddress().equals(userLogin.getEmailAddress())){
                 if (u.getPassword().equals(userLogin.getPassword())){
-                    return new ResponseEntity(HttpStatus.ACCEPTED);
+                    return new ResponseEntity<>(HttpStatus.ACCEPTED);
                 }
             }
         }
 
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        throw new ResourceUnauthorizedException();
+
+//        return new ResponseEntity<String>("Unauthorised", HttpStatus.UNAUTHORIZED);
     }
 
 
@@ -92,4 +97,9 @@ public class UsersResource {
     public void deleteUser(@PathParam("id") long id) {
         usersRepository.delete(id);
     }
+}
+
+@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+final class ResourceUnauthorizedException extends RuntimeException {
+    
 }
