@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="sudara.fernando" id="4">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="issues" />
+            </not>
+        </preConditions>
+
+        <createTable tableName="issues">
+            <column autoIncrement="true" name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_issue"/>
+            </column>
+
+            <column name="issue_details" type="VARCHAR(1000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="number_of_related_issues" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="issue_status" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column defaultValueComputed="now()" name="created" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
