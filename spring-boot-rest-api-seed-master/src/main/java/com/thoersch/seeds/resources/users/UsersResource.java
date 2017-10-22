@@ -2,6 +2,9 @@ package com.thoersch.seeds.resources.users;
 
 import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.users.User;
+import com.thoersch.seeds.representations.users.UserLogin;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,23 +46,20 @@ public class UsersResource {
         return user;
     }
 
-    @GET
-    @Path("/email/{email}")
-    public User getUser(@PathParam("email") String email) {
+    @POST
+    @Path("/login")
+    public ResponseEntity authUser(@Valid UserLogin userLogin) {
 
         List<User> userList = getUsers();
-        User user = null;
         for (User u : userList){
-            if (u.getEmailAddress().equals(email)){
-                user = u;
+            if (u.getEmailAddress().equals(userLogin.getEmailAddress())){
+                if (u.getPassword().equals(userLogin.getPassword())){
+                    return new ResponseEntity(HttpStatus.ACCEPTED);
+                }
             }
         }
 
-        if(user == null) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-
-        return user;
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
     }
 
 
