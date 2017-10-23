@@ -7,12 +7,10 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.thoersch.seeds.Application;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.representations.issues.Issue;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import com.thoersch.seeds.resources.issues.IssuesResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
@@ -35,22 +33,76 @@ import static org.junit.Assert.*;
 @DirtiesContext
 public class IssuesTest {
 
-   // @Autowired
-    //private IssuesRepository repo;
+    @SuppressWarnings("WeakerAccess")
+    protected static final String DATA_SET = "classpath:issue-items.xml";
 
-    private Issue issue;
+    @Autowired
+    private IssuesRepository repo;
+
+    private IssuesResource resource;
 
     @Before
     public void init() {
-        issue = new Issue();
-        issue.setIssueDetails("Some details");
-        issue.setIssueStatus(Issue.IssueStatus.PENDING);
-        issue.setNumberOfRelatedIssues(3);
+        this.resource = new IssuesResource(repo);
     }
 
     @Test
     public void testIfSummeryOfIssueIsGenerated() {
-        assertNotNull(issue.getIssueDetails());
+        final Issue issue = resource.getIssue(1);
+        assertNotNull(issue.getDescription());
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Tests if the issue summery is less than 1000 characters
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testIfSummeryOfIssueIsNotLengthy() {
+        final Issue issue = resource.getIssue(1);
+        final StringBuilder builder = new StringBuilder("_TEST_");
+        for (int i = 0; i < 100; i++) {
+            builder.append("_test_|_test_");
+        }
+
+        issue.setDescription(builder.toString());
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Tests if the issue summery is not empty
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testIfSummeryOfIssueIsTooSmall() {
+        final Issue issue = new Issue();
+        issue.setDescription("");
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Tests if assignees cannot be added when the issue is already
+     * marked as completed
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddAssigneeWhenIssueIsCompleted() {
+        final Issue issue = new Issue();
+        issue.setStatus(Issue.IssueStatus.COMPLETED);
+        issue.addAssignee("Hello");
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Tests if assignees cannot be added when the issue is already
+     * marked as rejected
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddAssigneeWhenIssueIsRejected() {
+        final Issue issue = new Issue();
+        issue.setStatus(Issue.IssueStatus.REJECTED);
+        issue.addAssignee("Hello");
     }
 
     /**
@@ -110,10 +162,14 @@ public class IssuesTest {
         assertEquals("A_DESC_FIRST", issues.get(0).getDescription());
     }
 
+    /**
+     * TEST ID :
+     *
+     */
     @Test
     public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
+        final Issue issue = resource.getIssue(1);
         assertTrue(issue.getNumberOfRelatedIssues() > 0);
     }
-
 
 }
