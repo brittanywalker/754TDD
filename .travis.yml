@@ -1,6 +1,5 @@
 language: java
 install: mvn clean install
-script: mvn liquibase:update -P local
 script: mvn test
 jdk: oraclejdk8
 services:
@@ -8,12 +7,14 @@ services:
 
 before_script:
   - psql -c 'CREATE ROLE "SpringBootUser" LOGIN
-               ENCRYPTED PASSWORD 'md513445691374efba1aaee7b0912e63af3'
+               ENCRYPTED PASSWORD "SpringBootPass"
                SUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;' -U postgres
 
   - psql -c 'CREATE DATABASE "SpringBootRestApi"
                  WITH ENCODING='UTF8'
                       OWNER="SpringBootUser"
                       CONNECTION LIMIT=-1;' -U postgres
+
+  - mvn liquibase:update -P local
 
 
