@@ -8,10 +8,6 @@ import com.thoersch.seeds.representations.users.User;
 import com.github.springtestdbunit.*;
 import com.github.springtestdbunit.annotation.*;
 import com.thoersch.seeds.*;
-import com.thoersch.seeds.persistence.issues.*;
-import com.thoersch.seeds.representations.issues.Issue;
-import com.thoersch.seeds.resources.issues.IssuesResource;
-import com.thoersh.seeds.resources.issues.IssuesTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +22,6 @@ import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.*;
 import org.springframework.test.context.support.*;
 import org.springframework.test.context.transaction.*;
-import org.springframework.transaction.annotation.*;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import static org.junit.Assert.*;
 
