@@ -2,10 +2,10 @@
 driverClass: org.postgresql.Driver
 
 # the username
-user: SpringBootUser
+user: springbootuser
 
 # the password
-password: SpringBootPass
+password: springbootpass
 
 # the JDBC URL
 url: jdbc:postgresql://127.0.0.1:5432/SpringBootRestApi
