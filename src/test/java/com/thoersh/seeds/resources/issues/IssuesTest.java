@@ -109,30 +109,30 @@ public class IssuesTest {
      * TEST ID :
      *
      */
-    @Test
-    public void testAddingNewIssue() {
-        final Issue issue = new Issue();
-        issue.setId(10L);
-        issue.setTitle("New Testing issue");
-        issue.setDescription("New Issue");
-        issue.setStatus(Issue.IssueStatus.COMPLETED);
-        resource.saveIssue(issue);
-    }
+    //@Test
+//    public void testAddingNewIssue() {
+//        final Issue issue = new Issue();
+//        issue.setId(10L);
+//        issue.setTitle("New Testing issue");
+//        issue.setDescription("New Issue");
+//        issue.setStatus(Issue.IssueStatus.COMPLETED);
+//        resource.saveIssue(issue);
+//    }
 
     /**
      * TEST ID :
      *
      * Test if all the issues can be retrieved from the system
      */
-    @Test
-    public void testGettingAllIssues() {
-        final List<Issue> issues = resource.getIssues(null);
-        assertTrue(!issues.isEmpty());
-        assertNotNull(issues.get(0));
-
-        final Issue issue = issues.get(0);
-        //assertEquals(1, issue.getId());
-    }
+    //@Test
+//    public void testGettingAllIssues() {
+//        final List<Issue> issues = resource.getIssues(null);
+//        assertTrue(!issues.isEmpty());
+//        assertNotNull(issues.get(0));
+//
+//        final Issue issue = issues.get(0);
+//        //assertEquals(1, issue.getId());
+//    }
 
     /**
      * TEST ID :
