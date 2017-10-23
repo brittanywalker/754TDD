@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-// Na
 @javax.persistence.Entity
 @Table(name = "books")
 public class Book {
