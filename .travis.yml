@@ -4,7 +4,6 @@ script: mvn test
 jdk: oraclejdk8
 services:
   - postgresql
-
 before_script:
   - psql -c 'CREATE ROLE "SpringBootUser" LOGIN
                ENCRYPTED PASSWORD "SpringBootPass"
@@ -16,5 +15,5 @@ before_script:
                       CONNECTION LIMIT=-1;' -U postgres
 
   - mvn liquibase:update -P local
-
-
+addons:
+  - postgresql: "9.4"
