@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="sudara.fernando" id="4">
+    <changeSet author="sudara.fernando" id="6">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="issues" />
@@ -12,15 +12,15 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="pk_issue"/>
             </column>
 
-            <column name="issue_details" type="VARCHAR(1000)">
+            <column name="description" type="VARCHAR(1000)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="number_of_related_issues" type="INT">
+            <column name="title" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="issue_status" type="VARCHAR(20)">
+            <column name="status" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
 

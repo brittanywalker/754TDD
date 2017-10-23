@@ -45,6 +45,7 @@ public class User {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updated;
 
+	
     public User() {
 
     }
@@ -127,6 +128,7 @@ public class User {
         this.updated = updated;
     }
 
+	
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
