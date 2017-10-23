@@ -9,7 +9,5 @@
 
     <include file="migrations/users-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/issues-schema.xml" relativeToChangelogFile="true"/>
-    <include file="migrations/books-schema.xml" relativeToChangelogFile="true"/>
-    <include file="migrations/users-books-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/content/example-seed-data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -111,7 +111,7 @@ public class IssuesTest {
     @Test
     public void testAddingNewIssue() {
         final Issue issue = new Issue();
-        issue.setId(10L);
+//        issue.setId(10L);
         issue.setTitle("New Testing issue");
         issue.setDescription("New Issue");
         issue.setStatus(Issue.IssueStatus.COMPLETED);
