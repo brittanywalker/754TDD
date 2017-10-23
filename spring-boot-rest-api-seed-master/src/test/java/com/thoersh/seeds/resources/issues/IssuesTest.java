@@ -16,8 +16,10 @@ import org.springframework.test.context.*;
 import org.springframework.test.context.junit4.*;
 import org.springframework.test.context.support.*;
 import org.springframework.test.context.transaction.*;
-import org.springframework.transaction.annotation.*;
 
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -30,26 +32,22 @@ import static org.junit.Assert.assertTrue;
 @DirtiesContext
 public class IssuesTest {
 
-    protected static final String DATA_SET = "classpath:datasets/issue-items.xml";
+    @SuppressWarnings("WeakerAccess")
+    protected static final String DATA_SET = "classpath:issue-items.xml";
 
     @Autowired
     private IssuesRepository repo;
 
     private IssuesResource resource;
 
-    private Issue issue;
-
     @Before
     public void init() {
         this.resource = new IssuesResource(repo);
-
-        issue = new Issue();
-        issue.setDescription("Some details");
-        issue.setStatus(Issue.IssueStatus.PENDING);
     }
 
     @Test
     public void testIfSummeryOfIssueIsGenerated() {
+        final Issue issue = resource.getIssue(1);
         assertNotNull(issue.getDescription());
     }
 
@@ -60,7 +58,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIfSummeryOfIssueIsNotLengthy() {
-        //issue = resource.getIssue(1);
+        final Issue issue = resource.getIssue(1);
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
             builder.append("_test_|_test_");
@@ -76,6 +74,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIfSummeryOfIssueIsTooSmall() {
+        final Issue issue = new Issue();
         issue.setDescription("");
     }
 
@@ -87,6 +86,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testAddAssigneeWhenIssueIsCompleted() {
+        final Issue issue = new Issue();
         issue.setStatus(Issue.IssueStatus.COMPLETED);
         issue.addAssignee("Hello");
     }
@@ -98,15 +98,77 @@ public class IssuesTest {
      * marked as rejected
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssigneeWhenIssueIsRejectd() {
+    public void testAddAssigneeWhenIssueIsRejected() {
+        final Issue issue = new Issue();
         issue.setStatus(Issue.IssueStatus.REJECTED);
         issue.addAssignee("Hello");
     }
 
+    /**
+     * TEST ID :
+     *
+     */
     @Test
-    public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
-        assertTrue(issue.getNumberOfRelatedIssues() > 0);
+    public void testAddingNewIssue() {
+        final Issue issue = new Issue();
+        issue.setId(10L);
+        issue.setTitle("New Testing issue");
+        issue.setDescription("New Issue");
+        issue.setStatus(Issue.IssueStatus.COMPLETED);
+        resource.saveIssue(issue);
     }
 
+    /**
+     * TEST ID :
+     *
+     * Test if all the issues can be retrieved from the system
+     */
+    @Test
+    public void testGettingAllIssues() {
+        final List<Issue> issues = resource.getIssues();
+        assertTrue(!issues.isEmpty());
+        assertNotNull(issues.get(0));
+
+        final Issue issue = issues.get(0);
+        //assertEquals(1, issue.getId());
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Test if the issues can be sorted by the name
+     */
+    @Test
+    public void testSortingIssuesByTitle() {
+        final List<Issue> issues = resource.getIssues("title");
+        assertTrue(!issues.isEmpty());
+        assertNotNull(issues.get(0));
+
+        assertEquals("A_Title_FIRST", issues.get(0).getTitle());
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Test if the issues can be sorted by the description
+     */
+    @Test
+    public void testSortIssuesByDescription() {
+        final List<Issue> issues = resource.getIssues("description");
+        assertTrue(!issues.isEmpty());
+        assertNotNull(issues.get(0));
+
+        assertEquals("A_DESC_FIRST", issues.get(0).getDescription());
+    }
+
+    /**
+     * TEST ID :
+     *
+     */
+    @Test
+    public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
+        final Issue issue = resource.getIssue(1);
+        assertTrue(issue.getNumberOfRelatedIssues() > 0);
+    }
 
 }

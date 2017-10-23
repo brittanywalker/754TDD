@@ -26,7 +26,7 @@ public class Issue {
     @NotNull
     private String description;
 
-    //@NotNull
+    @NotNull
     @Enumerated(STRING)
     private IssueStatus status = IssueStatus.PENDING;
 
@@ -70,7 +70,6 @@ public class Issue {
         this.status = status;
     }
 
-    //
     public void addAssignee(String assignee) { //TODO change the class
         if (this.status == IssueStatus.REJECTED || this.status == IssueStatus.COMPLETED) {
             throw new IllegalArgumentException("This issue is already rejected or completed");
