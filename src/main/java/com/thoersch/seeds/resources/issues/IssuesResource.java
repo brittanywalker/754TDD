@@ -28,12 +28,11 @@ public class IssuesResource {
     }
 
     @GET
-    public List<Issue> getIssues() {
-        return issuesRepository.findAll();
-    }
+    public List<Issue> getIssues(@QueryParam("sort") String sortBy) {
+        if (sortBy == null) {
+            return issuesRepository.findAll();
+        }
 
-    @GET
-    public List<Issue> getIssues(@PathParam("sort") String sortBy) {
         final Sort sort = new Sort(sortBy);
         return issuesRepository.findAll(sort);
     }
