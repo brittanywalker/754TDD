@@ -4,8 +4,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -21,49 +19,65 @@ public class Issue {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    private String title;
+
     @Length(max = 1000)
     @NotNull
-    private String issueDetails;
+    private String description;
 
-    private int numberOfRelatedIssues;
-
-    @NotNull
+    //@NotNull
     @Enumerated(STRING)
-    private IssueStatus issueStatus = IssueStatus.PENDING;
+    private IssueStatus status = IssueStatus.PENDING;
 
-    //private List<String> assignees; //TODO change to appropriate class (person?)
-
-    public Issue() {
-        //this.assignees = new ArrayList<>(1);
+    public Long getId() {
+        return id;
     }
 
-    public String getIssueDetails() {
-        return issueDetails;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setIssueDetails(String issueDetails) {
-        this.issueDetails = issueDetails;
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        if (description.length() == 0 || description.length() > 1000) {
+            throw new IllegalArgumentException("Details should have a word count of 1000");
+        }
+
+        this.description = description;
     }
 
     public int getNumberOfRelatedIssues() {
-        return numberOfRelatedIssues;
+        return 8;
     }
 
-    public void setNumberOfRelatedIssues(int numberOfRelatedIssues) {
-        this.numberOfRelatedIssues = numberOfRelatedIssues;
+    public IssueStatus getStatus() {
+        return status;
     }
 
-    public IssueStatus getIssueStatus() {
-        return issueStatus;
+    public void setStatus(IssueStatus status) {
+        this.status = status;
     }
 
-    public void setIssueStatus(IssueStatus issueStatus) {
-        this.issueStatus = issueStatus;
+    //
+    public void addAssignee(String assignee) { //TODO change the class
+        if (this.status == IssueStatus.REJECTED || this.status == IssueStatus.COMPLETED) {
+            throw new IllegalArgumentException("This issue is already rejected or completed");
+        }
+
+        //this.assignees.add(assignee);
     }
-//
-//    public void addAssignee(String assignee) { //TODO change the class
-//        this.assignees.add(assignee);
-//    }
 //
 //    public List<String> getAssignees() { //TODO change the class
 //        return assignees;
