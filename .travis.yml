@@ -5,7 +5,7 @@ jdk: oraclejdk8
 services:
   - postgresql
 
-before_script:
+before_install:
   - psql -c 'CREATE ROLE "SpringBootUser" LOGIN
                ENCRYPTED PASSWORD "SpringBootPass"
                SUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;' -U postgres
