@@ -29,6 +29,14 @@ public class User {
     @NotNull
     private String emailAddress;
 
+    @Length(max = 100)
+    @NotNull
+    private String password;
+
+    @Length(max = 100)
+    @NotNull
+    private String role;
+
     @Length(max = 255)
     @NotNull
     private String profilePicture;
@@ -37,15 +45,17 @@ public class User {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updated;
 
-
+	
     public User() {
 
     }
 
-    public User(String firstName, String lastName, String emailAddress, String profilePicture) {
+    public User(String firstName, String lastName, String emailAddress, String profilePicture, String password, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
+        this.password = password;
+        this.role = role;
         this.profilePicture = profilePicture;
     }
 
@@ -86,6 +96,22 @@ public class User {
         this.emailAddress = emailAddress;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -102,8 +128,7 @@ public class User {
         this.updated = updated;
     }
 
-
-
+	
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,6 +140,8 @@ public class User {
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (id != null ? !id.equals(user.id) : user.id != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (role != null ? !role.equals(user.role) : user.role != null) return false;
         if (profilePicture != null ? !profilePicture.equals(user.profilePicture) : user.profilePicture != null)
             return false;
 
@@ -128,6 +155,8 @@ public class User {
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (emailAddress != null ? emailAddress.hashCode() : 0);
         result = 31 * result + (profilePicture != null ? profilePicture.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (role != null ? role.hashCode() : 0);
         return result;
     }
 
@@ -138,6 +167,8 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", emailAddress='" + emailAddress + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
                 ", profilePicture='" + profilePicture + '\'' +
                 '}';
     }
