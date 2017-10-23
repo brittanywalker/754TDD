@@ -57,9 +57,11 @@ public class Issue {
         this.title = title;
     }
     @NotNull
+    @ManyToMany
     private List<User> assignees = new ArrayList<User>();
 
     @NotNull
+    @ManyToMany
     private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
 
     public String getDescription() {
