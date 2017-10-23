@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <users id="1" first_name="Harry" last_name="Jackson" email_address="hj@gmail.com"
+           profile_picture="face.png" password="q" role="developer"/>
+    <users id="2" first_name="Brit" last_name="Walker" email_address="bw@gmail.com"
+           profile_picture="face.png" password="q" role="admin"/>
+
+    <!--<forum_posts-->
+        <!--id=""-->
+        <!--cluster=""-->
+    <!--/>-->
+</dataset>
