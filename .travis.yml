@@ -10,6 +10,7 @@ before_install:
 
   - psql -c "CREATE DATABASE SpringBootRestApi WITH ENCODING='UTF8' OWNER=SpringBootUser CONNECTION LIMIT=-1;" -U postgres
 
+before_script:
   - mvn liquibase:update -P local
 
 addons:
