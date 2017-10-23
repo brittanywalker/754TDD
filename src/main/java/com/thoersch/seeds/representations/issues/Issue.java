@@ -1,5 +1,6 @@
 package com.thoersch.seeds.representations.issues;
 
+import com.thoersch.seeds.representations.forumposts.ForumPost;
 import com.thoersch.seeds.representations.users.User;
 import org.hibernate.validator.constraints.Length;
 
@@ -55,6 +56,11 @@ public class Issue {
     public void setTitle(String title) {
         this.title = title;
     }
+    @NotNull
+    private List<User> assignees = new ArrayList<User>();
+
+    @NotNull
+    private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
 
     public String getDescription() {
         return description;
@@ -103,6 +109,14 @@ public class Issue {
             }
         }
         return Boolean.FALSE;
+    }
+
+    public List<User> getAssignees() {
+        return assignees;
+    }
+
+    public void addAssignee(User assignee) { //TODO change the class
+        this.assignees.add(assignee);
     }
 
     public List<User> getAssignees() {
