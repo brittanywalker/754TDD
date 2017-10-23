@@ -4,17 +4,17 @@ Assignment 3 - Test Driven Development
 ## Create the database user
 
 ```
-CREATE ROLE "SpringBootUser" LOGIN
-  ENCRYPTED PASSWORD 'md513445691374efba1aaee7b0912e63af3'
+CREATE ROLE "springbootuser" LOGIN
+  PASSWORD 'springbootpass'
   SUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;
 ```
 
 ## Create the database
 
 ```
-CREATE DATABASE "SpringBootRestApi"
+CREATE DATABASE "assignment754"
   WITH ENCODING='UTF8'
-       OWNER="SpringBootUser"
+       OWNER="springbootuser"
        CONNECTION LIMIT=-1;
 ```
 
