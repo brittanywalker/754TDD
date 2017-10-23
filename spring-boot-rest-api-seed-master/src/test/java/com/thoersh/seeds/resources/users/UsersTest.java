@@ -10,6 +10,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 
+import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 import org.springframework.http.HttpStatus;
 
 
@@ -42,10 +44,11 @@ public class UsersTest {
     }
 
     /**
-     * Test User can be created
+     * TEST ID: 2.1.1
+     * Test User can be registered
      */
     @Test
-    public void testUserCreation(){
+    public void testUserRegistration(){
         HttpClient httpclient = HttpClientBuilder.create().build();
 
         try {
@@ -70,7 +73,8 @@ public class UsersTest {
     }
 
     /**
-     * Test a failed creation due to missing field
+     * TEST ID: 2.1.2
+     * Test a failed registration due to missing field
      */
     @Test
     public void testMissingFieldUserCreation(){
@@ -96,7 +100,8 @@ public class UsersTest {
     }
 
     /**
-     * Test a failed creation due to already existing email
+     * TEST ID: 2.1.3
+     * Test a failed registration due to already existing email
      */
     @Test
     public void testExistingEmailUserCreation(){
@@ -139,28 +144,38 @@ public class UsersTest {
 
 
     /**
-     * Test successful login
+     * TEST ID: 1.1
+     * Test successful developer login
      */
     @Test
-    public void testUserLogin(){
+    public void testDeveloperLogin(){
         HttpClient httpclient = HttpClientBuilder.create().build();
+        String responseString = null;
+        String expectedString = null;
 
         try {
-            HttpPost httppost = new HttpPost("127.0.0.1:8080/users/");
+            HttpPost httppost = new HttpPost("http://127.0.0.1:8080/users");
             httppost.setHeader("Content-Type", "application/json");
             StringEntity body = new StringEntity("{" +
-                    "\"firstName\": \"" + user.getFirstName() + "\"," +
-                    "\"lastName\": \"" + user.getLastName() + "\"," +
-                    "\"emailAddress\": \"" + user.getEmailAddress() + "\"," +
-                    "\"password\": \"" + user.getPassword() + "\"," +
-                    "\"role\": \"" + user.getRole() + "\"," +
-                    "\"profilePicture\": \"" + user.getProfilePicture() + "\"" +
+                    "\"firstName\": \"" + user2.getFirstName() + "\"," +
+                    "\"lastName\": \"" + user2.getLastName() + "\"," +
+                    "\"emailAddress\": \"" + user2.getEmailAddress() + "\"," +
+                    "\"password\": \"" + user2.getPassword() + "\"," +
+                    "\"role\": \"" + user2.getRole() + "\"," +
+                    "\"profilePicture\": \"" + user2.getProfilePicture() + "\"" +
                     "}");
             httppost.setEntity(body);
             HttpResponse response = httpclient.execute(httppost);
-            //HttpEntity entity = response.getEntity();
+            HttpEntity entity = response.getEntity();
 
-            assertEquals(HttpStatus.OK, response.getStatusLine().getStatusCode());
-        } catch (Exception exception) {}
+            responseString = EntityUtils.toString(entity, "UTF-8");
+            expectedString = "UserId: 4, Role: developer";
+
+
+        } catch (Exception exception) {
+            //Assert.fail(exception.getMessage());
+        }
+
+        assertEquals(expectedString, responseString);
     }
 }
