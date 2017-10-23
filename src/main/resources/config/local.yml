@@ -8,7 +8,7 @@ user: springbootuser
 password: springbootpass
 
 # the JDBC URL
-url: jdbc:postgresql://127.0.0.1:5432/SpringBootRestApi
+url: jdbc:postgresql://127.0.0.1:5432/assignment754
 
 # any properties specific to your JDBC driver:
 properties:
