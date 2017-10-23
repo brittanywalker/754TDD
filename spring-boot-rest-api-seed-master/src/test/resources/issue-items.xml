@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <Issues id="1" title="A_Title_FIRST" description="B_DESC_MIDDLE" status="PENDING"/>
+    <Issues id="2" title="B_Title_2" description="A_DESC_FIRST" status="PENDING"/>
+    <Issues id="3" title="Z_Title_LAST" description="Z_DESC_LAST" status="PENDING"/>
+</dataset>
