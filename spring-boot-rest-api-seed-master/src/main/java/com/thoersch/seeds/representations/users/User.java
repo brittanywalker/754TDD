@@ -2,7 +2,6 @@ package com.thoersch.seeds.representations.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thoersch.seeds.persistence.converters.LocalDateTimeConverter;
-import com.thoersch.seeds.representations.books.Book;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -45,12 +44,6 @@ public class User {
     @JsonIgnore
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updated;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_books",
-            joinColumns = @JoinColumn(name="user_id", updatable = false, nullable = false),
-            inverseJoinColumns = @JoinColumn(name="book_id", updatable = false, nullable = false))
-    private List<Book> books;
 
     public User() {
 
@@ -132,14 +125,6 @@ public class User {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
     }
 
     @Override

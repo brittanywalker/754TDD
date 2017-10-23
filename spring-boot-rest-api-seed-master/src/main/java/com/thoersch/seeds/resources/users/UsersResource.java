@@ -97,7 +97,3 @@ public class UsersResource {
     }
 }
 
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-final class ResourceUnauthorizedException extends RuntimeException {
-
-}
