@@ -17,6 +17,11 @@ import java.util.Objects;
 @javax.persistence.Entity
 @Table(name = "users")
 public class User {
+
+    public enum UserRole {
+        developer, admin
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +44,8 @@ public class User {
 
     @Length(max = 100)
     @NotNull
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Length(max = 255)
     @NotNull
@@ -59,7 +65,7 @@ public class User {
 
     }
 
-    public User(String firstName, String lastName, String emailAddress, String profilePicture, String password, String role) {
+    public User(String firstName, String lastName, String emailAddress, String profilePicture, String password, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -113,11 +119,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
