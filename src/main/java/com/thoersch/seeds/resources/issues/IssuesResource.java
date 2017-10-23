@@ -29,7 +29,7 @@ public class IssuesResource {
 
     @GET
     public List<Issue> getIssues(@QueryParam("sort") String sortBy) {
-        if (sortBy == null) {
+        if (sortBy == null || sortBy.isEmpty()) {
             return issuesRepository.findAll();
         }
 

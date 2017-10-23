@@ -124,15 +124,15 @@ public class IssuesTest {
      *
      * Test if all the issues can be retrieved from the system
      */
-    //@Test
-//    public void testGettingAllIssues() {
-//        final List<Issue> issues = resource.getIssues(null);
-//        assertTrue(!issues.isEmpty());
-//        assertNotNull(issues.get(0));
-//
-//        final Issue issue = issues.get(0);
-//        //assertEquals(1, issue.getId());
-//    }
+    @Test
+    public void testGettingAllIssues() {
+        final List<Issue> issues = resource.getIssues("");
+        assertTrue(!issues.isEmpty());
+        assertNotNull(issues.get(0));
+
+        final Issue issue = issues.get(0);
+        //assertEquals(1, issue.getId());
+    }
 
     /**
      * TEST ID :
