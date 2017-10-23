@@ -238,9 +238,9 @@
         <profile>
             <id>local</id>
             <properties>
-                <liquibase.url>jdbc:postgresql://localhost:5432/SpringBootRestApi</liquibase.url>
-                <liquibase.username>SpringBootUser</liquibase.username>
-                <liquibase.password>SpringBootPass</liquibase.password>
+                <liquibase.url>jdbc:postgresql://localhost:5432/assignment754</liquibase.url>
+                <liquibase.username>springbootuser</liquibase.username>
+                <liquibase.password>springbootpass</liquibase.password>
             </properties>
         </profile>
     </profiles>
