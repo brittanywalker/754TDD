@@ -2,6 +2,7 @@ package com.thoersch.seeds.resources.issues;
 
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.representations.issues.Issue;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,12 @@ public class IssuesResource {
     @GET
     public List<Issue> getIssues() {
         return issuesRepository.findAll();
+    }
+
+    @GET
+    public List<Issue> getIssues(@PathParam("sort") String sortBy) {
+        final Sort sort = new Sort(sortBy);
+        return issuesRepository.findAll(sort);
     }
 
     @GET
