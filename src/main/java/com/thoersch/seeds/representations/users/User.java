@@ -4,11 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thoersch.seeds.persistence.converters.LocalDateTimeConverter;
 import org.hibernate.validator.constraints.Length;
 
+import com.thoersch.seeds.representations.issues.Issue;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @javax.persistence.Entity
 @Table(name = "users")
@@ -44,6 +48,11 @@ public class User {
     @JsonIgnore
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updated;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_issues", joinColumns = @JoinColumn(name = "user_id", updatable = false, nullable = false),
+                    inverseJoinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
+    private List<Issue> issues;
 
 	
     public User() {
@@ -118,6 +127,30 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<Issue> getIssues(){
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues){
+        this.issues = issues;
+    }
+
+    //TODO might need to add user being passed in, to check if admin
+    public void assignIssue(Issue issue){
+        this.issues.add(issue);
+    }
+
+    public Boolean removeIssue(Issue issue){
+        for (Iterator<Issue> iterator = this.issues.listIterator(); iterator.hasNext();){
+           Issue i = iterator.next();
+           if (Objects.equals(i.getId(), issue.getId())){
+               iterator.remove();
+               return Boolean.TRUE;
+           }
+        }
+        return Boolean.FALSE;
     }
 
     public LocalDateTime getUpdated() {
