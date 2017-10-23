@@ -2,8 +2,13 @@ package com.thoersch.seeds.resources.users;
 
 import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.users.User;
+import com.thoersch.seeds.representations.users.UserLogin;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -43,6 +48,43 @@ public class UsersResource {
         return user;
     }
 
+    @GET
+    @Path("/email/{email}")
+    public User getUser(@PathParam("email") String email) {
+
+        List<User> userList = getUsers();
+        User user = null;
+        for (User u : userList){
+            if (u.getEmailAddress().equals(email)){
+                user = u;
+            }
+        }
+
+        if(user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+
+        return user;
+    }
+
+    @POST
+    @Path("/login")
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity authUser(@Valid UserLogin userLogin) {
+
+        List<User> userList = getUsers();
+        for (User u : userList){
+            if (u.getEmailAddress().equals(userLogin.getEmailAddress())){
+                if (u.getPassword().equals(userLogin.getPassword())){
+                    return new ResponseEntity<>("UserID: " + u.getId() + ", Role: " + u.getRole(),HttpStatus.ACCEPTED);
+                }
+            }
+        }
+
+        return new ResponseEntity<>("Unauthorised", HttpStatus.UNAUTHORIZED);
+    }
+
+
     @POST
     public User saveUser(@Valid User user) {
         return usersRepository.save(user);
@@ -54,3 +96,4 @@ public class UsersResource {
         usersRepository.delete(id);
     }
 }
+

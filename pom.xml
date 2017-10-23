@@ -58,6 +58,31 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>4.2.3.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+        </dependency>
+
+        <!--Testing stuff-->
+        <dependency>
+            <groupId>com.github.springtestdbunit</groupId>
+            <artifactId>spring-test-dbunit</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- Jackson -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -238,9 +263,9 @@
         <profile>
             <id>local</id>
             <properties>
-                <liquibase.url>jdbc:postgresql://localhost:5432/SpringBootRestApi</liquibase.url>
-                <liquibase.username>SpringBootUser</liquibase.username>
-                <liquibase.password>SpringBootPass</liquibase.password>
+                <liquibase.url>jdbc:postgresql://localhost:5432/assignment754</liquibase.url>
+                <liquibase.username>springbootuser</liquibase.username>
+                <liquibase.password>springbootpass</liquibase.password>
             </properties>
         </profile>
     </profiles>
