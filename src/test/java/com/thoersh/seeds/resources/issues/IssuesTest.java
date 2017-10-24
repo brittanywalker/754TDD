@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.thoersch.seeds.Application;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.representations.issues.Issue;
+import com.thoersch.seeds.representations.users.User;
 import com.thoersch.seeds.resources.issues.IssuesResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +42,12 @@ public class IssuesTest {
 
     private IssuesResource resource;
 
+    private User user;
+
     @Before
     public void init() {
         this.resource = new IssuesResource(repo);
+        user = new User("James", "Shaw", "js@gmail.com", "face.png", "password", User.UserRole.admin);
     }
 
     @Test
@@ -89,7 +93,7 @@ public class IssuesTest {
     public void testAddAssigneeWhenIssueIsCompleted() {
         final Issue issue = new Issue();
         issue.setStatus(Issue.IssueStatus.COMPLETED);
-        issue.addAssignee("Hello");
+        issue.addAssignee(user);
     }
 
     /**
@@ -102,7 +106,7 @@ public class IssuesTest {
     public void testAddAssigneeWhenIssueIsRejected() {
         final Issue issue = new Issue();
         issue.setStatus(Issue.IssueStatus.REJECTED);
-        issue.addAssignee("Hello");
+        issue.addAssignee(user);
     }
 
     /**
