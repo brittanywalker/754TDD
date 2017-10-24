@@ -5,6 +5,8 @@
     <users id="2" first_name="Brit" last_name="Walker" email_address="bw@gmail.com"
            profile_picture="face.png" password="q" role="admin"/>
 
+    <Issues id="1" title="First" description="pending issue" status="PENDING"/>
+
     <!--<forum_posts-->
         <!--id=""-->
         <!--cluster=""-->

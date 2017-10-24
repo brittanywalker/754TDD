@@ -33,7 +33,7 @@ public class Issue {
     @Enumerated(STRING)
     private IssueStatus status = IssueStatus.PENDING;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_issues", inverseJoinColumns = @JoinColumn(name = "user_id", updatable = false, nullable = false),
             joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
     private List<User> assignees;
@@ -78,12 +78,16 @@ public class Issue {
         this.status = status;
     }
 
-    public void addAssignee(User assignee) {
+    public Boolean addAssignee(User assignee, User assigner) {
+        if (!(assigner.getRole().equals(User.UserRole.admin))){
+            return Boolean.FALSE;
+        }
         if (this.status == IssueStatus.REJECTED || this.status == IssueStatus.COMPLETED) {
             throw new IllegalArgumentException("This issue is already rejected or completed");
         }
 
         this.assignees.add(assignee);
+        return Boolean.TRUE;
     }
 
     public List<User> getAssignees() {

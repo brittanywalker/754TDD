@@ -1,7 +1,10 @@
 package com.thoersh.seeds.resources.users;
 
+import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.persistence.users.UsersRepository;
+import com.thoersch.seeds.representations.issues.Issue;
 import com.thoersch.seeds.representations.users.UserLogin;
+import com.thoersch.seeds.resources.issues.IssuesResource;
 import com.thoersch.seeds.resources.users.UsersResource;
 import com.thoersch.seeds.representations.users.User;
 
@@ -40,31 +43,24 @@ public class AdminTest {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private IssuesRepository issuesRepository;
+
+    private IssuesResource issuesResource;
+
 //    private Cluster cluster;
 //    private ForumPost forumPost;
 //    private ForumPostRepository forumPostRepository;
 //    private ForumPostResource forumPostResource;
 
     private UsersResource usersResourceMock;
-    private User user;
-    private User userAdmin;
-    private UserLogin userLogin;
-    private UserLogin userAdminLogin;
-    private UserLogin incorrectLogin;
+
 
     @Before
     public void init() {
         this.usersResourceMock = new UsersResource(usersRepository);
-
+        this.issuesResource = new IssuesResource(issuesRepository);
 //        this.forumPostRepository = new ForumPostResource(forumPostRepository);
-
-
-        user = new User("James", "Shaw", "js@gmail.com", "face.png", "password", User.UserRole.admin);
-        userAdmin = new User("John", "Seinfeld", "js@gmail.com", "face.png", "password", User.UserRole.developer);
-
-        userLogin = new UserLogin("hj@gmail.com", "q");
-        userAdminLogin = new UserLogin("bw@gmail.com", "q");
-        incorrectLogin = new UserLogin("hj@gmail.com", "qw");
     }
 
     //TODO remove
@@ -107,6 +103,39 @@ public class AdminTest {
 //        Boolean actual = forumPost.removeCluster(cluster, userAdmin);
 //        assertEquals(Boolean.TRUE, actual);
 //    }
+
+    /**
+     * TEST ID: 10 / 10.2
+     *
+     * Admin assigns issue to a developer
+     */
+    @Test
+    public void testIssueAssign(){
+        Issue issue = issuesResource.getIssue(1);
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
+
+        Boolean success = issue.addAssignee(assignee, admin);
+
+        assertTrue(success);
+    }
+
+    /**
+     * TEST ID: 10.1
+     *
+     * Non admin assigns issue to a developer
+     */
+    @Test
+    public void testNonAdminIssueAssign(){
+        Issue issue = issuesResource.getIssue(1);
+        User assignee = usersResourceMock.getUser(1);
+        User nonAdmin = usersResourceMock.getUser(1);
+
+        Boolean success = issue.addAssignee(assignee, nonAdmin);
+
+        assertFalse(success);
+    }
+
 
 
 }
