@@ -4,15 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thoersch.seeds.persistence.converters.LocalDateTimeConverter;
 import org.hibernate.validator.constraints.Length;
 
+import com.thoersch.seeds.representations.issues.Issue;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @javax.persistence.Entity
 @Table(name = "users")
 public class User {
+
+    public enum UserRole {
+        developer, admin
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,9 +42,9 @@ public class User {
     @NotNull
     private String password;
 
-    @Length(max = 100)
     @NotNull
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Length(max = 255)
     @NotNull
@@ -45,12 +54,17 @@ public class User {
     @Convert(converter = LocalDateTimeConverter.class)
     private LocalDateTime updated;
 
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_issues", joinColumns = @JoinColumn(name = "user_id", updatable = false, nullable = false),
+                    inverseJoinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
+    private List<Issue> issues;
+
 	
     public User() {
 
     }
 
-    public User(String firstName, String lastName, String emailAddress, String profilePicture, String password, String role) {
+    public User(String firstName, String lastName, String emailAddress, String profilePicture, String password, UserRole role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
@@ -104,11 +118,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
@@ -118,6 +132,30 @@ public class User {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public List<Issue> getIssues(){
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues){
+        this.issues = issues;
+    }
+
+    //TODO might need to add user being passed in, to check if admin
+    public void assignIssue(Issue issue){
+        this.issues.add(issue);
+    }
+
+    public Boolean removeIssue(Issue issue){
+        for (Iterator<Issue> iterator = this.issues.listIterator(); iterator.hasNext();){
+           Issue i = iterator.next();
+           if (Objects.equals(i.getId(), issue.getId())){
+               iterator.remove();
+               return Boolean.TRUE;
+           }
+        }
+        return Boolean.FALSE;
     }
 
     public LocalDateTime getUpdated() {

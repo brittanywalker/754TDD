@@ -33,6 +33,7 @@ public class IssuesResource {
     }
 
     @GET
+    @Path("/sort/{sort}")
     public List<Issue> getIssues(@PathParam("sort") String sortBy) {
         final Sort sort = new Sort(sortBy);
         return issuesRepository.findAll(sort);

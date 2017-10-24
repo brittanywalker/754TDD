@@ -1,9 +1,14 @@
 package com.thoersch.seeds.representations.issues;
 
+import com.thoersch.seeds.representations.users.User;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -29,6 +34,11 @@ public class Issue {
     @NotNull
     @Enumerated(STRING)
     private IssueStatus status = IssueStatus.PENDING;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_issues", inverseJoinColumns = @JoinColumn(name = "user_id", updatable = false, nullable = false),
+            joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
+    private List<User> assignees;
 
     public Long getId() {
         return id;
@@ -70,15 +80,32 @@ public class Issue {
         this.status = status;
     }
 
-    public void addAssignee(String assignee) { //TODO change the class
+    public void addAssignee(User assignee, User assigner){
+        if (!(assigner.getRole().equals(User.UserRole.admin))){
+            throw new IllegalAccessError("Unauthorised User");
+        }
         if (this.status == IssueStatus.REJECTED || this.status == IssueStatus.COMPLETED) {
             throw new IllegalArgumentException("This issue is already rejected or completed");
         }
 
-        //this.assignees.add(assignee);
+        this.assignees.add(assignee);
     }
-//
-//    public List<String> getAssignees() { //TODO change the class
-//        return assignees;
-//    }
+
+    public Boolean removeAssignee(User assignee, User assigner){
+        if (!(assigner.getRole().equals(User.UserRole.admin))){
+            throw new IllegalAccessError("Unauthorised User");
+        }
+        for (Iterator<User> iterator = this.assignees.listIterator(); iterator.hasNext();){
+            User u = iterator.next();
+            if (Objects.equals(u.getId(), assignee.getId())){
+                iterator.remove();
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
+    }
+
+    public List<User> getAssignees() {
+        return assignees;
+    }
 }
