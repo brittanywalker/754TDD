@@ -53,14 +53,14 @@ public class IssuesUsersResource {
         User assigner = usersRepository.findOne(issueAssignForm.getAssignerId());
         Issue issue = issuesRepository.findOne(issueAssignForm.getIssueId());
 
-        try{
+        try {
             issue.addAssignee(assignee,assigner);
-        }catch (IllegalAccessError | Exception e){
+        } catch (IllegalAccessError | Exception e){
             return new ResponseEntity<>("Failed: " + e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
-
-        return new ResponseEntity<>("UserID: " +assignee.getId() + " was assigned to IssueId: "+issue.getId(),HttpStatus.ACCEPTED);
+        issuesRepository.save(issue);
+        return new ResponseEntity<>("UserID: " +assignee.getId() + " was assigned to IssueId: "+issue.getId(), HttpStatus.ACCEPTED);
     }
 
     @POST
@@ -71,17 +71,18 @@ public class IssuesUsersResource {
         User assigner = usersRepository.findOne(issueAssignForm.getAssignerId());
         Issue issue = issuesRepository.findOne(issueAssignForm.getIssueId());
         Boolean success = Boolean.FALSE;
-        try{
+
+        try {
             success = issue.removeAssignee(assignee,assigner);
-        }catch (IllegalAccessError e){
+            issuesRepository.save(issue);
+        } catch (IllegalAccessError e){
             return new ResponseEntity<>("Failed: " + e.getMessage(),HttpStatus.BAD_REQUEST);
         }
 
-
         if (success){
-            return new ResponseEntity<>("UserID: " +assignee.getId() + " was removed from IssueId: "+issue.getId(),HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("UserID: " +assignee.getId() + " was removed from IssueId: "+issue.getId(), HttpStatus.ACCEPTED);
         } else {
-            return new ResponseEntity<>("Failed: Issue was not previously assigned",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Failed: Issue was not previously assigned", HttpStatus.BAD_REQUEST);
         }
     }
 }
