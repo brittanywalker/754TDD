@@ -8,8 +8,10 @@ import com.thoersch.seeds.Application;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.issues.Issue;
+import com.thoersch.seeds.representations.issues.IssueAssignForm;
 import com.thoersch.seeds.representations.users.User;
 import com.thoersch.seeds.resources.issues.IssuesResource;
+import com.thoersch.seeds.resources.issues.IssuesUsersResource;
 import com.thoersch.seeds.resources.users.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +27,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -38,6 +41,14 @@ import static org.junit.Assert.*;
 @DirtiesContext
 public class IssuesTest {
 
+    private static final Long USER_ID_ADMIN = 2L;
+    private static final Long USER_ID_DEV_1 = 1L;
+    private static final Long USER_ID_DEV_2 = 3L;
+
+    private static final Long ISSUE_01 = 1L;
+    private static final Long ISSUE_02 = 2L;
+    private static final Long ISSUE_03 = 3L;
+
     @SuppressWarnings("WeakerAccess")
     protected static final String DATA_SET = "classpath:issue-items.xml";
 
@@ -49,11 +60,13 @@ public class IssuesTest {
 
     private IssuesResource issuesResourceMock;
     private UsersResource usersResourceMock;
+    private IssuesUsersResource issuesUsersResourceMock;
 
     @Before
     public void init() {
         this.issuesResourceMock = new IssuesResource(issuesRepository);
         this.usersResourceMock = new UsersResource(usersRepository);
+        this.issuesUsersResourceMock = new IssuesUsersResource(issuesRepository, usersRepository);
     }
 
     @Test
@@ -119,6 +132,23 @@ public class IssuesTest {
         issue.addAssignee(assignee, admin);
     }
 
+    @Test
+    public void testAddAssigneeAsAnAdmin() {
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_01);
+        issue.setStatus(Issue.IssueStatus.PENDING);
+
+        final User dev = usersResourceMock.getUser(USER_ID_DEV_1);
+        assertTrue(dev.getRole() == User.UserRole.developer);
+
+        final IssueAssignForm form = new IssueAssignForm(dev.getId(), admin.getId(), issue.getId());
+        issuesUsersResourceMock.assignIssue(form);
+
+        assertTrue(issuesUsersResourceMock.getAssignees(issue.getId()).contains(dev));
+    }
+
     /**
      * TEST ID :
      *
@@ -140,7 +170,7 @@ public class IssuesTest {
      */
     @Test
     public void testGettingAllIssues() {
-        final List<Issue> issues = issuesResourceMock.getIssues("");
+        final List<Issue> issues = issuesResourceMock.getIssues();
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -183,13 +213,13 @@ public class IssuesTest {
      */
     @Test
     public void testIfAdminCanMarkAnIssueAsResolved() {
-        final Issue issue = issuesResourceMock.getIssue(1L);
-        final User admin = usersResourceMock.getUser(2L);
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
 
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, 1L, "completed");
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, ISSUE_01, "completed");
 
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
-        assertEquals(response.getBody().toString(), "");
+        assertEquals(response.getBody().toString(), "IssueID: 1  was marked as COMPLETED");
     }
 
     /**
@@ -199,17 +229,22 @@ public class IssuesTest {
      */
     @Test
     public void testIfDeveloperAssignedToAnIssueCanMarkItAsResolved() {
-        final User devAssigned = usersResourceMock.getUser(1L);
-        final User admin = usersResourceMock.getUser(2L);
+        final User devAssigned = usersResourceMock.getUser(USER_ID_DEV_1);
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+
+        assertTrue(admin.getRole() == User.UserRole.admin);
 
         //Assign the user first
-        final Issue issue = issuesRepository.findOne(2L);
-        issue.addAssignee(devAssigned, admin);
+        Issue issue = issuesRepository.findOne(ISSUE_02);
+        final IssueAssignForm form = new IssueAssignForm(devAssigned.getId(), admin.getId(), issue.getId());
+        issuesUsersResourceMock.assignIssue(form);
+
+        //Get the issue and check if he is assigned
+        assertTrue(issuesUsersResourceMock.getAssignees(issue.getId()).contains(devAssigned));
 
         ResponseEntity response = issuesResourceMock.changeIssueStatus(devAssigned, issue.getId(), "completed");
 
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
-        assertEquals(response.getBody().toString(), "");
     }
 
     /**
@@ -217,21 +252,59 @@ public class IssuesTest {
      *
      * Test if a developer who is not assigned to an issue can mark it as resolved
      */
-    @Test
+    @Test(expected = WebApplicationException.class)
     public void testIfDeveloperNotAssignedToAnIssueCanMarkItAsResolved() {
-        final User devUnassigned = usersResourceMock.getUser(3L);
-        final User admin = usersResourceMock.getUser(2L);
+        final User devUnassigned = usersResourceMock.getUser(USER_ID_DEV_2);
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+
+        assertTrue(admin.getRole() == User.UserRole.admin);
 
         //Un-assign if the user is already assigned
-        final Issue issue = issuesRepository.findOne(3L);
-        issue.removeAssignee(devUnassigned, admin);
+        Issue issue = issuesRepository.findOne(ISSUE_03);
+        final IssueAssignForm form = new IssueAssignForm(devUnassigned.getId(), admin.getId(), issue.getId());
+        issuesUsersResourceMock.removeIssue(form);
 
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
+        assertTrue(!issuesUsersResourceMock.getAssignees(issue.getId()).contains(devUnassigned));
 
-        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
-        assertEquals(response.getBody().toString(), "");
+        issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
     }
 
+    @Test
+    public void testIfIssueStatusCanBeChangedToRejected() {
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+
+        //Check rejected
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "rejected");
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+    }
+
+    @Test
+    public void testIfIssueStatusCanBeChangedToPending() {
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+
+        //Check pending
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "pending");
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+    }
+
+    @Test
+    public void testIfIssueStatusCanBeChangedToAssigned() {
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+
+        //Check assigned
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "assigned");
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+    }
+    
     /**
      * TEST ID :
      *
