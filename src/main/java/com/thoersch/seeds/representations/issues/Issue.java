@@ -8,8 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 
