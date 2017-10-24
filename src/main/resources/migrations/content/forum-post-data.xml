@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="brittany.walker" id="forum-post">
+
+        <!-- Forum Posts -->
+        <insert schemaName="public" tableName="forum-posts">
+            <column name="id" value="1"/>
+            <column name="text" value="xero-php API, how to structure query"/>
+            <column name="date" value="1/06/2017"/>
+            <column name="author" value="Rajiv Pardiwala"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="I'm try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero->load('Accounting\BankTransaction')->setParameter('AccountID','XXXXXXX-4097-4028-9b99-XXXXXXXXX')->fromDate(new DateTime('2016-06-01 00:00:00'))->execute());which becomes this:""https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&fromDate=2016-06-01"however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?""/>
+            <column name="url" value="https://community.xero.com/developer/discussion/50795838/"/>
+        </insert>
+
+
+        <sql>insert into forum_posts (user_id, issue_id)
+            values ((select id from users where role='developer'),
+            (select id from issues where status='PENDING'))</sql>
+
+    </changeSet>
+
+</databaseChangeLog>
