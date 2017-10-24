@@ -6,8 +6,11 @@ import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.thoersch.seeds.Application;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
+import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.issues.Issue;
+import com.thoersch.seeds.representations.users.User;
 import com.thoersch.seeds.resources.issues.IssuesResource;
+import com.thoersch.seeds.resources.users.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,11 +42,16 @@ public class IssuesTest {
     @Autowired
     private IssuesRepository repo;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
     private IssuesResource resource;
+    private UsersResource usersResourceMock;
 
     @Before
     public void init() {
         this.resource = new IssuesResource(repo);
+        this.usersResourceMock = new UsersResource(usersRepository);
     }
 
     @Test
@@ -88,8 +96,10 @@ public class IssuesTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddAssigneeWhenIssueIsCompleted() {
         final Issue issue = new Issue();
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
         issue.setStatus(Issue.IssueStatus.COMPLETED);
-        issue.addAssignee("Hello");
+        issue.addAssignee(assignee, admin);
     }
 
     /**
@@ -101,8 +111,10 @@ public class IssuesTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddAssigneeWhenIssueIsRejected() {
         final Issue issue = new Issue();
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
         issue.setStatus(Issue.IssueStatus.REJECTED);
-        issue.addAssignee("Hello");
+        issue.addAssignee(assignee, admin);
     }
 
     /**

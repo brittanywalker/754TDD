@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
-    <changeSet author="tyler.hoersch" id="example-seed-data">
+    <changeSet author="tyler.hoersch" id="example-seed-data3">
 
         <!-- Example Users -->
         <insert schemaName="public" tableName="users">
@@ -20,5 +20,23 @@
             <column name="role" value="developer"/>
             <column name="profile_picture" value="https://pbs.twimg.com/profile_images/3762026736/1ccf6ffc12fbe7339dfd3e9fa048f17c_normal.jpeg"/>
         </insert>
+
+        <insert schemaName="public" tableName="issues">
+            <column name="description" value="This is an issue"/>
+            <column name="title" value="UhOh"/>
+            <column name="status" value="PENDING"/>
+        </insert>
+
+        <insert schemaName="public" tableName="issues">
+            <column name="description" value="This is another issue"/>
+            <column name="title" value="OhNo"/>
+            <column name="status" value="COMPLETED"/>
+        </insert>
+
+        <sql>insert into users_issues (user_id, issue_id)
+            values ((select id from users where role='developer'),
+            (select id from issues where status='PENDING'))</sql>
+
     </changeSet>
+
 </databaseChangeLog>
