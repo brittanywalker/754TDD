@@ -15,6 +15,7 @@ import java.util.Date;
 public class ForumPost {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long _question_id;
 
     @NotNull
