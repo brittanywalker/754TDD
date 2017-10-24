@@ -3,20 +3,105 @@
     <changeSet author="brittany.walker" id="forum-post">
 
         <!-- Forum Posts -->
-        <insert schemaName="public" tableName="forum-posts">
+        <insert schemaName="public" tableName="forumposts">
             <column name="id" value="1"/>
             <column name="text" value="xero-php API, how to structure query"/>
             <column name="date" value="1/06/2017"/>
             <column name="author" value="Rajiv Pardiwala"/>
             <column name="forum_details_id" value="2286"/>
-            <column name="content" value="I'm try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero->load('Accounting\BankTransaction')->setParameter('AccountID','XXXXXXX-4097-4028-9b99-XXXXXXXXX')->fromDate(new DateTime('2016-06-01 00:00:00'))->execute());which becomes this:""https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&fromDate=2016-06-01"however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?""/>
+            <column name="content" value="I&apos;m try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero-&gt;load(&apos;Accounting\BankTransaction&apos;)-&gt;setParameter(&apos;AccountID&apos;,&apos;XXXXXXX-4097-4028-9b99-XXXXXXXXX&apos;)-&gt;fromDate(new DateTime(&apos;2016-06-01 00:00:00&apos;))-&gt;execute());which becomes this:&quot;https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&amp;fromDate=2016-06-01&quot;however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?"/>
             <column name="url" value="https://community.xero.com/developer/discussion/50795838/"/>
         </insert>
 
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="2"/>
+            <column name="text" value="Delivery Address on Invoice"/>
+            <column name="date" value="31/05/2017"/>
+            <column name="author" value="Sam Jones"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="Hi,I am wondering if it is possible to add a Delivery Address to an invoice. We have suppliers with multiple, constantly in use, delivery address. We need to add this address onto the invoice in some way so the supplier knows what address it was for.I know in the docs it states &quot;It is not possible to manually override the address on a per-invoice basis.&quot; but does anyone know a way around this or an alternative solution to record the address on an invoice?ThanksSam"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/50739864/"/>
+        </insert>
 
-        <sql>insert into forum_posts (user_id, issue_id)
-            values ((select id from users where role='developer'),
-            (select id from issues where status='PENDING'))</sql>
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="3"/>
+            <column name="text" value="Getting zero dollar value categories included in Profit and Loss Report"/>
+            <column name="date" value="9/05/2017"/>
+            <column name="author" value="stu barr"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="I am having trouble when I GET a Profit and Loss report through the api. It gets all rows that have a dollar value greater then zero but does not include any rows with a zero dollar value. Is it possible to include all rows even if they have a zero dollar value in the profit and loss report? Cheers"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/49157379/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="4"/>
+            <column name="text" value="Link Manual Journal Entry Transactions to an Invoice or Bill"/>
+            <column name="date" value="30/04/2017"/>
+            <column name="author" value="Harry Jackson"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="We are making manual journal entries via the API... This is feeding the income statement and P&amp;L correctly and now we want to link a series of manual journal entries to an Invoice or a Bill. Is there a way to accomplish this? For context... In our case, we provide level-of-effort cost-plus-fixed-fee services so we have one invoice per month containing a series of manual journal entries entered one or more times a day. We are submitting the journal entries via the API since there are too many to do this manually."/>
+            <column name="url" value="https://community.xero.com/developer/discussion/48619929/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="5"/>
+            <column name="text" value="Delete ALL data and start again?"/>
+            <column name="date" value="24/04/2017"/>
+            <column name="author" value="Steve McKeogh"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="Hi,I know all about the Demo Company account, and I&apos;m aware you can reset this account back to how it was when created, but this account contains loads of data initially that I do not want, so this account is no good for me.So I&apos;m on my trial account, which starts with everything nice and empty (makes my OCD all happy). But whilst doing API calls and filling it with data, we can&apos;t (understandably) delete certain data (e.g Auth&apos;d invoices).Is there anyway we can reset a NON demo account back to nothing, I mean delete everything I have created and get it back to blank so I can start fresh and not worry about invoice numbers being taken up during testing?Any help appreciated!Thanks"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/48309065/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="6"/>
+            <column name="text" value="Hi there,I am unable to login with my login credentials today.Can I know what could be the reason?"/>
+            <column name="date" value="21/04/2017"/>
+            <column name="author" value="Sheela Dubey"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="Is it the server is down?"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/48163783/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="7"/>
+            <column name="text" value="Invoice"/>
+            <column name="date" value="13/04/2017"/>
+            <column name="author" value="hardik panchal"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="XeroApi.Model.Contact cn = new XeroApi.Model.Contact();            {                               cn.Name = &quot;Viral1 Chovat1&quot;;            }            var test1 = repository.Contacts;            XeroApi.Model.LineItems ln = new XeroApi.Model.LineItems();            {                XeroApi.Model.LineItem ln1 = new XeroApi.Model.LineItem();                {                    ln1.Description = &quot;This is Item1&quot;;                    ln1.Quantity = 20;                    ln1.UnitAmount = 100;                    ln1.AccountCode = &quot;1212&quot;;                }            }                        XeroApi.Model.Invoice invoice = new XeroApi.Model.Invoice()            {                InvoiceID=Guid.NewGuid(),                InvoiceNumber=&quot;1&quot;,                 Type = &quot;ACCREC&quot;,                Contact = cn,                LineItems = ln,                Date = DateTime.Now,                DueDate = DateTime.Now,                Status = &quot;AUTHORISED&quot;,            };            var createdInvoice = repository.UpdateOrCreate&lt;XeroApi.Model.Invoice&gt;(invoice);            XeroApi.Model.Invoice invoice1 = repository.Create(createdInvoice);found invoice1.validationStatus is Error and cant insert Invoice . Help me"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/47708547/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="8"/>
+            <column name="text" value="Private authentication problem"/>
+            <column name="date" value="11/04/2017"/>
+            <column name="author" value="Mark Henderson"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="I&apos;m trying to integrate Xero into my c# app using the PrivateAuthenticator from your GitHub page (https://github.com/XeroAPI/Xero-Net/blob/master/Xero.Api.Example.Applications/Private/PrivateAuthenticator.cs) but, no matter what I do, I always get a null reference exception {&quot;Value cannot be null.\r\nParameter name: key&quot;} on the line return new RsaSha1Signer().CreateSignature(_certificate, token, uri, verb);In case it&apos;s a problem with the certificate I&apos;ve tried several, generated with different methods (openssl, markecert, several online certificate generators) but I get the same error with every one.My code in full, with most of it being copied directly from GitHub. I call GetContactID() with a dummy ID to test:        public static XeroCoreApi api = null;        public static Contact GetContactID(int customerID)        {            Customer cust = db.Customers.Find(customerID);            if (api == null) Authenticate();            var contacts = api.Contacts.Where(&quot;ContactNumber=&quot; + cust.ExternalID).Find();            return contacts.FirstOrDefault();        }        public static void Authenticate()        {            string key = &quot;{MY KEY}&quot;;            string secret = &quot;{MY SECRET}&quot;;            api = new XeroCoreApi(&quot;https://api.xero.com&quot;,                                   new PrivateAuthenticator(HttpContext.Current.Server.MapPath(&quot;Xero_key.crt&quot;)),                                   new Consumer(key, secret),                                   null,                                   new DefaultMapper(),                                   new DefaultMapper());        }    public class PrivateAuthenticator : IAuthenticator    {        private readonly X509Certificate2 _certificate;        public PrivateAuthenticator(string certificatePath)            : this(certificatePath, &quot;&quot;)        {        }        public PrivateAuthenticator(string certificatePath, string certificatePassword = &quot;&quot;)        {            _certificate = new X509Certificate2();            _certificate.Import(certificatePath, certificatePassword, X509KeyStorageFlags.MachineKeySet);        }        public PrivateAuthenticator(X509Certificate2 certificate)        {            _certificate = certificate;        }        public string GetSignature(IConsumer consumer, IUser user, Uri uri, string verb, IConsumer consumer1)        {            var token = new Token            {                ConsumerKey = consumer.ConsumerKey,                ConsumerSecret = consumer.ConsumerSecret,                TokenKey = consumer.ConsumerKey            };            return new RsaSha1Signer().CreateSignature(_certificate, token, uri, verb);        }        public X509Certificate Certificate { get { return _certificate; } }        public IToken GetToken(IConsumer consumer, IUser user)        {            return null;        }        public IUser User { get; set; }    }I&apos;ve been struggling with this for the last 8 hours with no success so any help you can give would be very welcome."/>
+            <column name="url" value="https://community.xero.com/developer/discussion/47581711/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="9"/>
+            <column name="text" value="link api to a xero instance"/>
+            <column name="date" value="6/04/2017"/>
+            <column name="author" value="Bernard Bailey"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="Hi team,I have an api which connects to a developer version of xero and retrieves bank receipts as expected.I now want to point this api to a number of different instances of zero.  When I log into the target instance in xero, I can see the banking transactions, but no place to start the authorisation process for the api.Is the api link only available to certain logins or is it related the level of the zero instance.Your help is appreciated.Bernard"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/47249752/"/>
+        </insert>
+
+        <insert schemaName="public" tableName="forumposts">
+            <column name="id" value="10"/>
+            <column name="text" value="Xero Interface with PMS system"/>
+            <column name="date" value="31/03/2017"/>
+            <column name="author" value="Matthew Covert"/>
+            <column name="forum_details_id" value="2286"/>
+            <column name="content" value="Hi,I just wanted some assistance on getting Xero intergrated with a PMS system that we are using.We are using roomMaster Premier edition (PMS) and would like to get the information from PMS to be pulled into Xero once night audit is done.Would really appreciate some assistance.Thanks,Mat"/>
+            <column name="url" value="https://community.xero.com/developer/discussion/46842661/"/>
+        </insert>
 
     </changeSet>
 

@@ -11,4 +11,6 @@
     <include file="migrations/issues-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/users-issues-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/content/example-seed-data.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/content/forum-post-data.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
