@@ -36,10 +36,6 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="date" type="TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-
             <column defaultValueComputed="now()" name="created" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
