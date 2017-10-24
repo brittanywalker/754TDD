@@ -40,7 +40,7 @@ public class Issue {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_issues", inverseJoinColumns = @JoinColumn(name = "user_id", updatable = false, nullable = false),
             joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
-    private List<User> assignees;
+    private List<User> assignees = new ArrayList<User>();
 
     public Long getId() {
         return id;
@@ -57,9 +57,6 @@ public class Issue {
     public void setTitle(String title) {
         this.title = title;
     }
-    @NotNull
-    @ManyToMany
-    private List<User> assignees = new ArrayList<User>();
 
     @NotNull
     @ManyToMany
@@ -121,8 +118,5 @@ public class Issue {
     public void addAssignee(User assignee) { //TODO change the class
         this.assignees.add(assignee);
     }
-
-    public List<User> getAssignees() {
-        return assignees;
-    }
+    
 }
