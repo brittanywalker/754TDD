@@ -1,8 +1,12 @@
 package com.thoersch.seeds.resources.issues;
 
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
+import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.issues.Issue;
+import com.thoersch.seeds.representations.users.User;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,5 +65,27 @@ public class IssuesResource {
     @Path("/{id}")
     public void deleteIssue(@PathParam("id") long id) {
         issuesRepository.delete(id);
+    }
+
+    /**
+     * Mark an issue as either PENDING, ASSIGNED, COMPLETED, REJECTED
+     * Url - /1/?status=completed
+     * @param user
+     * @param issueId
+     * @param status can be either PENDING, ASSIGNED, COMPLETED, REJECTED
+     * @return
+     */
+    @POST
+    @Path("/{id}/{userId}")
+    public ResponseEntity changeIssueStatus(@Valid User user, @PathParam("id") long issueId, @QueryParam("status") String status) {
+        final Issue issue = getIssue(issueId);
+
+        final Issue.IssueStatus issueStatus;
+        switch (status) {
+            case "COMPLETED":
+                issueStatus = Issue.IssueStatus.COMPLETED;
+        }
+
+        return new ResponseEntity<>("UserID:  was assigned to IssueId: "+issue.getId(), HttpStatus.ACCEPTED);
     }
 }

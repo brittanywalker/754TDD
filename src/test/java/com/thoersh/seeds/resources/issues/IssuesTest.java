@@ -16,6 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,23 +42,23 @@ public class IssuesTest {
     protected static final String DATA_SET = "classpath:issue-items.xml";
 
     @Autowired
-    private IssuesRepository repo;
+    private IssuesRepository issuesRepository;
 
     @Autowired
     private UsersRepository usersRepository;
 
-    private IssuesResource resource;
+    private IssuesResource issuesResourceMock;
     private UsersResource usersResourceMock;
 
     @Before
     public void init() {
-        this.resource = new IssuesResource(repo);
+        this.issuesResourceMock = new IssuesResource(issuesRepository);
         this.usersResourceMock = new UsersResource(usersRepository);
     }
 
     @Test
     public void testIfSummeryOfIssueIsGenerated() {
-        final Issue issue = resource.getIssue(1);
+        final Issue issue = issuesResourceMock.getIssue(1);
         assertNotNull(issue.getDescription());
     }
 
@@ -67,7 +69,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIfSummeryOfIssueIsNotLengthy() {
-        final Issue issue = resource.getIssue(1);
+        final Issue issue = issuesResourceMock.getIssue(1);
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
             builder.append("_test_|_test_");
@@ -128,7 +130,7 @@ public class IssuesTest {
 //        issue.setTitle("New Testing issue");
 //        issue.setDescription("New Issue");
 //        issue.setStatus(Issue.IssueStatus.COMPLETED);
-//        resource.saveIssue(issue);
+//        issuesResourceMock.saveIssue(issue);
 //    }
 
     /**
@@ -138,7 +140,7 @@ public class IssuesTest {
      */
     @Test
     public void testGettingAllIssues() {
-        final List<Issue> issues = resource.getIssues("");
+        final List<Issue> issues = issuesResourceMock.getIssues("");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -153,7 +155,7 @@ public class IssuesTest {
      */
     @Test
     public void testSortingIssuesByTitle() {
-        final List<Issue> issues = resource.getIssues("title");
+        final List<Issue> issues = issuesResourceMock.getIssues("title");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -167,7 +169,7 @@ public class IssuesTest {
      */
     @Test
     public void testSortIssuesByDescription() {
-        final List<Issue> issues = resource.getIssues("description");
+        final List<Issue> issues = issuesResourceMock.getIssues("description");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -177,10 +179,66 @@ public class IssuesTest {
     /**
      * TEST ID :
      *
+     * Test if an admin can mark an issue as resolved
+     */
+    @Test
+    public void testIfAdminCanMarkAnIssueAsResolved() {
+        final Issue issue = issuesResourceMock.getIssue(1L);
+        final User admin = usersResourceMock.getUser(2L);
+
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, 1L, "completed");
+
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+        assertEquals(response.getBody().toString(), "");
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Test if a developer who is assigned to an issue can mark it as resolved
+     */
+    @Test
+    public void testIfDeveloperAssignedToAnIssueCanMarkItAsResolved() {
+        final User devAssigned = usersResourceMock.getUser(1L);
+        final User admin = usersResourceMock.getUser(2L);
+
+        //Assign the user first
+        final Issue issue = issuesRepository.findOne(2L);
+        issue.addAssignee(devAssigned, admin);
+
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(devAssigned, issue.getId(), "completed");
+
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+        assertEquals(response.getBody().toString(), "");
+    }
+
+    /**
+     * TEST ID :
+     *
+     * Test if a developer who is not assigned to an issue can mark it as resolved
+     */
+    @Test
+    public void testIfDeveloperNotAssignedToAnIssueCanMarkItAsResolved() {
+        final User devUnassigned = usersResourceMock.getUser(3L);
+        final User admin = usersResourceMock.getUser(2L);
+
+        //Un-assign if the user is already assigned
+        final Issue issue = issuesRepository.findOne(3L);
+        issue.removeAssignee(devUnassigned, admin);
+
+        ResponseEntity response = issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
+
+        assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
+        assertEquals(response.getBody().toString(), "");
+    }
+
+    /**
+     * TEST ID :
+     *
      */
     @Test
     public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
-        final Issue issue = resource.getIssue(1);
+        final Issue issue = issuesResourceMock.getIssue(1);
         assertTrue(issue.getNumberOfRelatedIssues() > 0);
     }
 

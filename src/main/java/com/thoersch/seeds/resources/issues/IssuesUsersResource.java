@@ -25,6 +25,7 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Transactional
 public class IssuesUsersResource {
+
     private final IssuesRepository issuesRepository;
     private final UsersRepository usersRepository;
 
@@ -33,7 +34,6 @@ public class IssuesUsersResource {
         this.issuesRepository = issuesRepository;
         this.usersRepository = usersRepository;
     }
-
 
     @GET
     public List<User> getAssignees(@PathParam("issueId") long issueId) {
@@ -83,8 +83,6 @@ public class IssuesUsersResource {
         } else {
             return new ResponseEntity<>("Failed: Issue was not previously assigned",HttpStatus.BAD_REQUEST);
         }
-
     }
-
 }
 
