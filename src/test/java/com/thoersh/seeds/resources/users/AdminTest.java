@@ -64,12 +64,6 @@ public class AdminTest {
 //        this.forumPostRepository = new ForumPostResource(forumPostRepository);
     }
 
-    //TODO remove
-    @Test
-    public void testDummy(){
-        return;
-    }
-
 
 //    /**
 //     * TEST ID: 7
