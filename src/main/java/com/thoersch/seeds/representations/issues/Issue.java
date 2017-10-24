@@ -6,7 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -78,16 +80,29 @@ public class Issue {
         this.status = status;
     }
 
-    public Boolean addAssignee(User assignee, User assigner) {
+    public void addAssignee(User assignee, User assigner){
         if (!(assigner.getRole().equals(User.UserRole.admin))){
-            return Boolean.FALSE;
+            throw new IllegalAccessError("Unauthorised User");
         }
         if (this.status == IssueStatus.REJECTED || this.status == IssueStatus.COMPLETED) {
             throw new IllegalArgumentException("This issue is already rejected or completed");
         }
 
         this.assignees.add(assignee);
-        return Boolean.TRUE;
+    }
+
+    public Boolean removeAssignee(User assignee, User assigner){
+        if (!(assigner.getRole().equals(User.UserRole.admin))){
+            throw new IllegalAccessError("Unauthorised User");
+        }
+        for (Iterator<User> iterator = this.assignees.listIterator(); iterator.hasNext();){
+            User u = iterator.next();
+            if (Objects.equals(u.getId(), assignee.getId())){
+                iterator.remove();
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 
     public List<User> getAssignees() {

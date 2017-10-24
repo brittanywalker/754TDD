@@ -1,5 +1,6 @@
 package com.thoersh.seeds.resources.users;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.issues.Issue;
@@ -114,10 +115,7 @@ public class AdminTest {
         Issue issue = issuesResource.getIssue(1);
         User assignee = usersResourceMock.getUser(1);
         User admin = usersResourceMock.getUser(2);
-
-        Boolean success = issue.addAssignee(assignee, admin);
-
-        assertTrue(success);
+        issue.addAssignee(assignee, admin);
     }
 
     /**
@@ -125,16 +123,55 @@ public class AdminTest {
      *
      * Non admin assigns issue to a developer
      */
-    @Test
+    @Test(expected = IllegalAccessError.class)
     public void testNonAdminIssueAssign(){
         Issue issue = issuesResource.getIssue(1);
         User assignee = usersResourceMock.getUser(1);
         User nonAdmin = usersResourceMock.getUser(1);
+        issue.addAssignee(assignee, nonAdmin);
+    }
 
-        Boolean success = issue.addAssignee(assignee, nonAdmin);
+    /**
+     * TEST ID: 11 / 11.2
+     *
+     * Admin un-assigns an issue to a developer
+     */
+    @Test
+    public void testRemoveIssue(){
+        Issue issue = issuesResource.getIssue(2);
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
+        Boolean success = issue.removeAssignee(assignee, admin);
+        assertTrue(success);
+    }
 
+    /**
+     * TEST ID: 11.1
+     *
+     * Non-admin un-assigns an issue to a developer
+     */
+    @Test(expected = IllegalAccessError.class)
+    public void testNonAdminRemoveIssue(){
+        Issue issue = issuesResource.getIssue(2);
+        User assignee = usersResourceMock.getUser(1);
+        User nonAdmin = usersResourceMock.getUser(1);
+        Boolean success = issue.removeAssignee(assignee, nonAdmin);
+    }
+
+    /**
+     * TEST ID: 11.3
+     *
+     * Admin un-assigns an issue to a developer they arent assigned to
+     */
+    @Test
+    public void testRemoveNonAssignedIssue(){
+        Issue issue = issuesResource.getIssue(1);
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
+        Boolean success = issue.removeAssignee(assignee, admin);
         assertFalse(success);
     }
+
 
 
 
