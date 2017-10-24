@@ -42,7 +42,6 @@ public class User {
     @NotNull
     private String password;
 
-    @Length(max = 100)
     @NotNull
     @Enumerated(EnumType.STRING)
     private UserRole role;

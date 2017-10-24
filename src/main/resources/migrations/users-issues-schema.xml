@@ -27,8 +27,8 @@
             <column name="updated" type="TIMESTAMP"/>
         </createTable>
 
-        <addForeignKeyConstraint baseColumnNames="issue_id" baseTableName="users_issues" baseTableSchemaName="public" constraintName="fk_users_issues__issues" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issues" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
-        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_issues" baseTableSchemaName="public" constraintName="fk_users_issues__users" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="issue_id" baseTableName="users_issues" baseTableSchemaName="public" constraintName="fk_users_issues__issues" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issues" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="users_issues" baseTableSchemaName="public" constraintName="fk_users_issues__users" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
 
         <addUniqueConstraint tableName="users_issues" columnNames="user_id, issue_id" constraintName="uq_users_issues__user_id_issue_id" deferrable="false" disabled="false" initiallyDeferred="false"/>
     </changeSet>

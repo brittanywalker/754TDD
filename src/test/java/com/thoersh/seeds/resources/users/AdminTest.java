@@ -59,8 +59,8 @@ public class AdminTest {
 //        this.forumPostRepository = new ForumPostResource(forumPostRepository);
 
 
-        user = new User("James", "Shaw", "js@gmail.com", "face.png", "password", "admin");
-        userAdmin = new User("John", "Seinfeld", "js@gmail.com", "face.png", "password", "developer");
+        user = new User("James", "Shaw", "js@gmail.com", "face.png", "password", User.UserRole.admin);
+        userAdmin = new User("John", "Seinfeld", "js@gmail.com", "face.png", "password", User.UserRole.developer);
 
         userLogin = new UserLogin("hj@gmail.com", "q");
         userAdminLogin = new UserLogin("bw@gmail.com", "q");
