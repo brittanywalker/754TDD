@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+    <changeSet author="lubomira.tzankov" id="forumposts-schema">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="forumposts" />
+            </not>
+        </preConditions>
+
+        <createTable tableName="forumposts">
+            <column autoIncrement="true" name="id" type="bigserial">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_forumpost"/>
+            </column>
+
+            <column name="forum_details_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="text" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="author" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="content" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="url" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column defaultValueComputed="now()" name="created" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
