@@ -8,4 +8,6 @@
            profile_picture="face.png" password="q" role="developer"/>
     <users id="2" first_name="Brit" last_name="Walker" email_address="bw@gmail.com"
            profile_picture="face.png" password="q" role="admin"/>
+    <users id="3" first_name="Mira" last_name="Mira" email_address="ml@gmail.com"
+           profile_picture="face.png" password="q1" role="developer"/>
 </dataset>
