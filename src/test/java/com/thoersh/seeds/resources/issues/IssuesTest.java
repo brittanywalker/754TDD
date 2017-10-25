@@ -28,6 +28,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -149,6 +150,26 @@ public class IssuesTest {
         assertTrue(issuesUsersResourceMock.getAssignees(issue.getId()).contains(dev));
     }
 
+    @Test(expected = WebApplicationException.class)
+    public void testAddAssigneeAsADeveloper() {
+        final User dev1 = usersResourceMock.getUser(USER_ID_DEV_1);
+        assertTrue(dev1.getRole() != User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_01);
+        issue.setStatus(Issue.IssueStatus.PENDING);
+
+        final User dev2 = usersResourceMock.getUser(USER_ID_DEV_1);
+        assertTrue(dev2.getRole() == User.UserRole.developer);
+
+        final IssueAssignForm form = new IssueAssignForm(dev2.getId(), dev1.getId(), issue.getId());
+        try {
+            issuesUsersResourceMock.assignIssue(form);
+        } catch (WebApplicationException e) {
+            assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw e;
+        }
+    }
+
     /**
      * TEST ID :
      *
@@ -266,7 +287,12 @@ public class IssuesTest {
 
         assertTrue(!issuesUsersResourceMock.getAssignees(issue.getId()).contains(devUnassigned));
 
-        issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
+        try {
+            issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
+        } catch (WebApplicationException e) {
+            assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw e;
+        }
     }
 
     @Test
@@ -304,7 +330,23 @@ public class IssuesTest {
         ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "assigned");
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
-    
+
+    @Test(expected = WebApplicationException.class)
+    public void testInvalidIssueStatus() {
+        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        assertTrue(admin.getRole() == User.UserRole.admin);
+
+        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+
+        //Check invalid status
+        try {
+            issuesResourceMock.changeIssueStatus(admin, issue.getId(), "invalid");
+        } catch (WebApplicationException e) {
+            assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
+            throw e;
+        }
+    }
+
     /**
      * TEST ID :
      *
