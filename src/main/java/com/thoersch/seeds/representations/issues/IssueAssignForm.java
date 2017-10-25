@@ -12,6 +12,12 @@ public class IssueAssignForm{
 
     public IssueAssignForm(){}
 
+    /**
+     * Create new assign issue form
+     * @param assigneeId the person who is assigned to
+     * @param assignerId the person who is assigning the isse
+     * @param issueId the issue id
+     */
     public IssueAssignForm(Long assigneeId, Long assignerId, Long issueId) {
         this.assigneeId = assigneeId;
         this.assignerId = assignerId;
