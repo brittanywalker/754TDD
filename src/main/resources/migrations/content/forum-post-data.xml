@@ -6,7 +6,7 @@
         <insert schemaName="public" tableName="forumposts">
             <column name="id" value="1"/>
             <column name="text" value="xero-php API, how to structure query"/>
-            <column name="date" value="1/06/2017"/>
+            <column name="date" value="2017/06/01"/>
             <column name="author" value="Rajiv Pardiwala"/>
             <column name="forum_details_id" value="2286"/>
             <column name="content" value="I&apos;m try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero-&gt;load(&apos;Accounting\BankTransaction&apos;)-&gt;setParameter(&apos;AccountID&apos;,&apos;XXXXXXX-4097-4028-9b99-XXXXXXXXX&apos;)-&gt;fromDate(new DateTime(&apos;2016-06-01 00:00:00&apos;))-&gt;execute());which becomes this:&quot;https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&amp;fromDate=2016-06-01&quot;however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?"/>
@@ -16,7 +16,7 @@
         <insert schemaName="public" tableName="forumposts">
             <column name="id" value="2"/>
             <column name="text" value="Delivery Address on Invoice"/>
-            <column name="date" value="31/05/2017"/>
+            <column name="date" value="2017/05/31"/>
             <column name="author" value="Sam Jones"/>
             <column name="forum_details_id" value="2286"/>
             <column name="content" value="Hi,I am wondering if it is possible to add a Delivery Address to an invoice. We have suppliers with multiple, constantly in use, delivery address. We need to add this address onto the invoice in some way so the supplier knows what address it was for.I know in the docs it states &quot;It is not possible to manually override the address on a per-invoice basis.&quot; but does anyone know a way around this or an alternative solution to record the address on an invoice?ThanksSam"/>
