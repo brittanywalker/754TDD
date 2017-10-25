@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -27,8 +29,24 @@ public class SentencesResource {
     }
 
     @GET
-    public List<Sentences> getSentences() {
-        List<Sentences> sentences = sentencesRepository.findAll();
+    public List<String> getIssueSentences() {
+        List<Sentences> issueSentences = sentencesRepository.findAll();
+        List<String> sentences = null;
+        HashMap<Long, String> sentenceMap = null;
+        
+        for (Sentences sentence : issueSentences) {
+            if (sentence.getCategory() == 1){
+                if (sentenceMap.containsKey(sentence.getQuestion_id())){
+                    String content = sentenceMap.get(sentence.getQuestion_id());
+                    content = content + sentence.getContent();
+                    sentenceMap.put(sentence.getQuestion_id(), content);
+                } else {
+                    sentenceMap.put(sentence.getQuestion_id(), sentence.getContent());
+                }
+            }
+        }
+        sentences = new ArrayList<>(sentenceMap.values());
+        
         return sentences;
     }
 
