@@ -79,13 +79,36 @@ public class IssuesResource {
     @Path("/{id}/{userId}")
     public ResponseEntity changeIssueStatus(@Valid User user, @PathParam("id") long issueId, @QueryParam("status") String status) {
         final Issue issue = getIssue(issueId);
-
-        final Issue.IssueStatus issueStatus;
-        switch (status) {
-            case "COMPLETED":
-                issueStatus = Issue.IssueStatus.COMPLETED;
+        if (user.getRole() != User.UserRole.admin && !issue.getAssignees().contains(user)) {
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
 
-        return new ResponseEntity<>("UserID:  was assigned to IssueId: "+issue.getId(), HttpStatus.ACCEPTED);
+        final Issue.IssueStatus issueStatus;
+        switch (status.toLowerCase()) {
+            case "completed":
+            case "done":
+                issueStatus = Issue.IssueStatus.COMPLETED;
+                break;
+
+            case "pending":
+                issueStatus = Issue.IssueStatus.PENDING;
+                break;
+
+            case "assigned":
+                issueStatus = Issue.IssueStatus.ASSIGNED;
+                break;
+
+            case "rejected":
+                issueStatus = Issue.IssueStatus.REJECTED;
+                break;
+
+            default:
+                throw new WebApplicationException(Response.Status.BAD_REQUEST);
+        }
+
+        issue.setStatus(issueStatus);
+        issuesRepository.save(issue);
+
+        return new ResponseEntity<>("IssueID: " + issue.getId() + "  was marked as " + issueStatus.name(), HttpStatus.ACCEPTED);
     }
 }

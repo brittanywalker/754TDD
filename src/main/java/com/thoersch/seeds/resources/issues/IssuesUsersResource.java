@@ -56,7 +56,7 @@ public class IssuesUsersResource {
         try {
             issue.addAssignee(assignee,assigner);
         } catch (IllegalAccessError | Exception e){
-            return new ResponseEntity<>("Failed: " + e.getMessage(),HttpStatus.BAD_REQUEST);
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
         }
 
         issuesRepository.save(issue);

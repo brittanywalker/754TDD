@@ -295,6 +295,11 @@ public class IssuesTest {
         }
     }
 
+    /**
+     * TEST ID :
+     *
+     * Test if the issue status can be changed to rejected
+     */
     @Test
     public void testIfIssueStatusCanBeChangedToRejected() {
         final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
@@ -307,6 +312,11 @@ public class IssuesTest {
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
+    /**
+     * TEST ID :
+     *
+     * Test if the issue status can be changed to pending
+     */
     @Test
     public void testIfIssueStatusCanBeChangedToPending() {
         final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
@@ -319,6 +329,11 @@ public class IssuesTest {
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
+    /**
+     * TEST ID :
+     *
+     * Test if the issue status can be changed to assigned
+     */
     @Test
     public void testIfIssueStatusCanBeChangedToAssigned() {
         final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
@@ -331,6 +346,12 @@ public class IssuesTest {
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
+    /**
+     * TEST ID :
+     *
+     * Test if the issue status can not be changed to an invalid status
+     * Only supported status are PENDING, ASSIGNED, COMPLETED, REJECTED
+     */
     @Test(expected = WebApplicationException.class)
     public void testInvalidIssueStatus() {
         final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
