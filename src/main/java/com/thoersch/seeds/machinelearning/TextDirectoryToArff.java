@@ -23,7 +23,7 @@ public class TextDirectoryToArff {
     public Instances createDataset(String directoryPath) throws Exception {
 
         // Declare two numeric attributes
-        Attribute Attribute1 = new Attribute("id");
+        //Attribute Attribute1 = new Attribute("id");
         Attribute Attribute2 = new Attribute("content");
 
         // Declare a nominal attribute along with its values
@@ -35,19 +35,19 @@ public class TextDirectoryToArff {
         category.addElement(4);
         Attribute Attribute3 = new Attribute("category", category);
 
-        Attribute Attribute4 = new Attribute("question_id");
+        //Attribute Attribute4 = new Attribute("question_id");
 
         // Declare the feature vector
         FastVector fvWekaAttributes = new FastVector(4);
-        fvWekaAttributes.addElement(Attribute1);
+       // fvWekaAttributes.addElement(Attribute1);
         fvWekaAttributes.addElement(Attribute2);
         fvWekaAttributes.addElement(Attribute3);
-        fvWekaAttributes.addElement(Attribute4);
+        //fvWekaAttributes.addElement(Attribute4);
 
         // Create an empty training set
         Instances trainingSet = new Instances("Training", fvWekaAttributes, 10);
         // Set class index
-        trainingSet.setClassIndex(3);
+        trainingSet.setClassIndex(1);
 
         File dir = new File(directoryPath);
         String[] files = dir.list();

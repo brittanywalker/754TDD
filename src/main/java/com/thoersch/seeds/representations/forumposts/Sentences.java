@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "sentences")
 public class Sentences {
 
-    public Sentences(Long id, String content, Integer category, Integer question_id) {
+    public Sentences(Long id, String content, Integer category, Long question_id) {
         this.id = id;
         this.content = content;
         this.category = category;
@@ -35,7 +35,7 @@ public class Sentences {
     private Integer category;
 
     @NotNull
-    private Integer question_id;
+    private Long question_id;
 
     public Long getId() {
         return id;
@@ -61,11 +61,11 @@ public class Sentences {
         this.category = category;
     }
 
-    public Integer getQuestion_id() {
+    public Long getQuestion_id() {
         return question_id;
     }
 
-    public void setQuestion_id(Integer question_id) {
+    public void setQuestion_id(Long question_id) {
         this.question_id = question_id;
     }
 }

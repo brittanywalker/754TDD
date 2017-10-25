@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import java.util.List;
 
 /**
@@ -28,5 +30,10 @@ public class SentencesResource {
     public List<Sentences> getSentences() {
         List<Sentences> sentences = sentencesRepository.findAll();
         return sentences;
+    }
+
+    @POST
+    public Sentences saveSentences(@Valid Sentences sentences) {
+        return sentencesRepository.save(sentences);
     }
 }

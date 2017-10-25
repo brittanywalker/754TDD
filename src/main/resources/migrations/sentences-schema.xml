@@ -21,7 +21,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="question_id" type="INT">
+            <column name="question_id" type="bigserial">
                 <constraints nullable="false"/>
             </column>
 
