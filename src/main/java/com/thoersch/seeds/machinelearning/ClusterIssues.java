@@ -25,7 +25,7 @@ public class ClusterIssues {
     SentencesResource sentencesResource = new SentencesResource(sentencesRepository);
     HashMap<Long, String> allSentences;
 
-    public void main(String[] args){
+    public void main(){
 
         ClassifySentences sentenceClassifier = new ClassifySentences();
         sentenceClassifier.classifyPostSentences();

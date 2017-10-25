@@ -2,6 +2,7 @@ package com.thoersch.seeds;
 
 import com.thoersch.seeds.init.LoggingInitialization;
 import com.thoersch.seeds.init.filters.ApiOriginFilter;
+import com.thoersch.seeds.machinelearning.ClusterIssues;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -32,6 +33,9 @@ public class Application {
         properties.setProperty("org.apache.tomcat.util.http.ServerCookie.ALLOW_HTTP_SEPARATORS_IN_V0", "true");
 
         new SpringApplicationBuilder(Application.class).properties(properties).showBanner(false).run(args);
+
+        ClusterIssues clusterIssues = new ClusterIssues();
+        clusterIssues.main();
     }
 
     @Bean

@@ -34,7 +34,7 @@ public class TextDirectoryToArff {
         category.addElement(2);
         category.addElement(3);
         category.addElement(4);
-        Attribute Attribute3 = new Attribute("category", category);
+        Attribute Attribute3 = new Attribute("category", category.toString());
 
         //Attribute Attribute4 = new Attribute("question_id");
 
