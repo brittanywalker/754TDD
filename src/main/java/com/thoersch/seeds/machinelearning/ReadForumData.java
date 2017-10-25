@@ -3,15 +3,11 @@ import com.thoersch.seeds.persistence.forumposts.ForumPostsRepository;
 import com.thoersch.seeds.representations.forumposts.ForumPost;
 import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import weka.classifiers.trees.J48;
 import java.io.*;
 import java.util.List;
-
 import weka.core.*;
-
-import javax.annotation.Generated;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 
 /**
  * Created by britt on 24/10/2017.
