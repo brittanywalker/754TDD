@@ -33,7 +33,7 @@ public class SentencesResource {
     }
 
     @POST
-    public Sentences saveSentences(@Valid Sentences sentences) {
-        return sentencesRepository.save(sentences);
+    public Sentences saveSentence(@Valid Sentences sentence) {
+        return sentencesRepository.save(sentence);
     }
 }

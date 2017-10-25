@@ -1,9 +1,10 @@
 package com.thoersch.seeds.machinelearning;
-import com.sun.xml.internal.bind.v2.TODO;
 import com.thoersch.seeds.persistence.forumposts.ForumPostsRepository;
+import com.thoersch.seeds.persistence.forumposts.SentencesRepository;
 import com.thoersch.seeds.representations.forumposts.ForumPost;
 import com.thoersch.seeds.representations.forumposts.Sentences;
 import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
+import com.thoersch.seeds.resources.forumposts.SentencesResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import weka.classifiers.trees.J48;
@@ -14,16 +15,19 @@ import weka.core.*;
 /**
  * Created by britt on 24/10/2017.
  */
-public class ReadForumData {
+public class ClassifySentences {
 
     @Autowired
     ForumPostsRepository forumPostsRepository;
+    SentencesRepository sentencesRepository;
 
-    public void main(String[] args){
+    List<Sentences> allPostSentences = null;
+
+    public void classifyPostSentences(){
 
         TextDirectoryToArff tdta = new TextDirectoryToArff();
-        Instances dataset = null;
-        J48 classifier = null;
+        Instances dataset;
+        J48 classifier;
 
         try {
             dataset = tdta.createDataset(File.separator + "spring-boot-rest-api-seed-master" + File.separator + "trainingdata");
@@ -33,14 +37,13 @@ public class ReadForumData {
             classifier = new J48();         // new instance of tree
             classifier.setOptions(options);
             if (dataset != null) {
-                classifier.buildClassifier(dataset);  // build classifier
+                classifier.buildClassifier(dataset);  // build classifier and train on dataset
             }
 
-
+            // Get all posts to split into sentences and then categorise.
             ForumPostsResource forumPostsResource = new ForumPostsResource(forumPostsRepository);
             List<ForumPost> posts = forumPostsResource.getPosts();
             Attribute Attribute2 = new Attribute("content");
-            List<Sentences> allPostSentences = null;
 
             for (int i = 0; i < posts.size(); i++){
                 String content = posts.get(i).get_content();
@@ -59,29 +62,17 @@ public class ReadForumData {
             System.err.println(e.getMessage());
             e.printStackTrace();
         }
+
+        if (allPostSentences.size() > 0){
+            saveSentences(allPostSentences);
+        }
     }
 
-    public static J48 buildTrainClassifier(){
-        //Create arff dataset from .txt files in trainingdata directory
-        TextDirectoryToArff tdta = new TextDirectoryToArff();
-        Instances dataset;
-        J48 classifier = new J48();
+    public void saveSentences(List<Sentences> sentencesList){
 
-        try {
-            dataset = tdta.createDataset(File.separator + "spring-boot-rest-api-seed-master" + File.separator + "trainingdata");
-            System.out.println(dataset);
-            String[] options = new String[1];
-            options[0] = "-U";           // unpruned tree
-            classifier = new J48();         // new instance of tree
-            classifier.setOptions(options);
-            if (dataset != null) {
-                classifier.buildClassifier(dataset);  // build classifier
-            }
-        } catch(Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+        SentencesResource sentencesResource = new SentencesResource(sentencesRepository);
+        for (Sentences sentence : sentencesList){
+            sentencesResource.saveSentence(sentence);
         }
-
-        return classifier;
     }
 }

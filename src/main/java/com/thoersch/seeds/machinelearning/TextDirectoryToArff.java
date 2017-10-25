@@ -16,6 +16,7 @@ import weka.core.*;
  * TextDirectoryToArff <directory path> <p/>
  *
  * @author Richard Kirkby (rkirkby at cs.waikato.ac.nz)
+ * modified by Brittany Walker
  * @version 1.0
  */
 public class TextDirectoryToArff {
@@ -72,18 +73,5 @@ public class TextDirectoryToArff {
             }
         }
         return trainingSet;
-    }
-
-    public static void main(String[] args) {
-
-        TextDirectoryToArff tdta = new TextDirectoryToArff();
-        try {
-            Instances dataset = tdta.createDataset(File.separator + "spring-boot-rest-api-seed-master" + File.separator + "trainingdata");
-            System.out.println(dataset);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
-        }
-
     }
 }

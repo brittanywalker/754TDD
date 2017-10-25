@@ -10,7 +10,7 @@
 
         <createTable tableName="sentences">
             <column autoIncrement="true" name="id" type="bigserial">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_issue"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_sentence"/>
             </column>
 
             <column name="content" type="VARCHAR(1000)">
