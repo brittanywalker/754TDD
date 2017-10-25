@@ -29,9 +29,8 @@ public class SentencesResource {
     }
 
     @GET
-    public List<String> getIssueSentences() {
+    public HashMap<Long, String> getIssueSentences() {
         List<Sentences> issueSentences = sentencesRepository.findAll();
-        List<String> sentences = null;
         HashMap<Long, String> sentenceMap = null;
         
         for (Sentences sentence : issueSentences) {
@@ -45,9 +44,8 @@ public class SentencesResource {
                 }
             }
         }
-        sentences = new ArrayList<>(sentenceMap.values());
-        
-        return sentences;
+
+        return sentenceMap;
     }
 
     @POST
