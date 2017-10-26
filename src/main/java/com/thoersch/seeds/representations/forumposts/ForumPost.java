@@ -24,7 +24,6 @@ public class ForumPost {
     @NotNull
     private String _text;
 
-    @NotNull
     private Date _date;
 
     @NotNull
