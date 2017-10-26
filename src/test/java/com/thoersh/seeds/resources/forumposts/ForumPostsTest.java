@@ -129,11 +129,56 @@ public class ForumPostsTest {
 
     /**
      * TEST ID: 8.2
-     * Admin remove forum post from cluster with only one post (Where should the forum post go? New cluster? Next best cluster?)
+     * Admin removes forum post from cluster with only one post.
+     * Expected behaviour: forum post goes to new single-post cluster.
+     * Test is essentially the same as 8.1, a different issue (with only one associated post)
+     * is retrieved from the database for the test.
      */
     @Test
     public void testAdminRemovePostFromSinglePostCluster() {
+        //get an issue that has only one post in it (id 2 in migration data)
+        List<Issue> issues = issuesResource.getIssues();
+        Issue issue = issuesResource.getIssue(2l);
 
+        //Get the only post in it and try to remove it
+        ForumPost toRemove = issue.getForumPosts().get(0);
+        ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
+                toRemove.get_question_id(),
+                adminUser.getId(),
+                issue.getId()
+        ));
+
+
+        if (actual.getStatusCode() != HttpStatus.ACCEPTED) {
+            fail("Could not remove forum post from cluster, response: \n" + actual.getBody());
+        }
+
+        //status code is ACCEPTED but there is no guarantee the correct operation has been performed correctly on the list of forum posts belonging to the issue
+
+        // Check if it is still in the same issue. If so, fail test.
+        if (issuesResource.getIssue(1l).getForumPosts().contains(toRemove)) {
+            fail("Forum post still in same issue.");
+        }
+
+        //post must be moved to at least ONE (new) issue, and must be only post in issue.
+        //confirm that removed forum post has been put into own issue/cluster.
+        issues = issuesResource.getIssues();
+        Integer presenceCount = 0; //how many times post appears in issues, in general
+        Integer singlePostIssueCount = 0; //how many times post appears as only post in issue
+        for (Issue i : issues) {
+            if(i.getForumPosts().contains(toRemove)) {
+                presenceCount++;
+            }
+            if (i.getForumPosts().contains(toRemove) && i.getForumPosts().size() == 1) {
+                singlePostIssueCount++;
+            }
+        }
+
+        if (presenceCount == 0) {
+            fail("Forum post not present in any issues. Should be present in at least one.");
+        } else if (singlePostIssueCount > 1) {
+            fail("Too many issues where post is the only one.");
+        }
     }
 
     /**
