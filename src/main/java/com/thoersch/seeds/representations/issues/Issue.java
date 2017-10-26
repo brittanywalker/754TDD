@@ -118,5 +118,23 @@ public class Issue {
     public void addAssignee(User assignee) { //TODO change the class
         this.assignees.add(assignee);
     }
-    
+
+    public List<ForumPost> getForumPosts() {
+        return forumPosts;
+    }
+
+    public List<ForumPost> addForumPost(ForumPost post) {
+        forumPosts.add(post);
+        return forumPosts;
+    }
+
+    public List<ForumPost> removeForumPost(ForumPost post) {
+        for (ForumPost p : forumPosts) {
+            if (post.get_question_id() == p.get_question_id()) {
+                forumPosts.remove(p);
+            }
+        }
+        return forumPosts;
+    }
+
 }
