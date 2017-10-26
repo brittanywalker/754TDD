@@ -7,10 +7,13 @@ import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
 import com.thoersch.seeds.resources.forumposts.SentencesResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.trees.J48;
 import java.io.*;
 import java.util.List;
 import weka.core.*;
+import weka.filters.Filter;
+import weka.filters.supervised.attribute.Discretize;
 
 /**
  * Created by britt on 24/10/2017.
@@ -28,16 +31,20 @@ public class ClassifySentences {
         TextDirectoryToArff tdta = new TextDirectoryToArff();
         Instances dataset;
         J48 classifier;
+        Discretize filter;
+        Instances nominalData;
 
         try {
-            dataset = tdta.createDataset(File.separator + "spring-boot-rest-api-seed-master" + File.separator + "trainingdata");
-            System.out.println(dataset);
-            String[] options = new String[1];
-            options[0] = "-U";           // unpruned tree
-            classifier = new J48();         // new instance of tree
-            classifier.setOptions(options);
-            if (dataset != null) {
-                classifier.buildClassifier(dataset);  // build classifier and train on dataset
+            dataset = tdta.createDataset();
+            dataset.setClassIndex(dataset.numAttributes() - 1);
+            filter = new Discretize();
+            filter.setInputFormat(dataset);
+            nominalData= Filter.useFilter(dataset, filter);
+            classifier = new J48();
+            classifier.setUnpruned(true);        // using an unpruned J48
+            classifier.buildClassifier(nominalData);
+            if (nominalData != null) {
+                classifier.buildClassifier(nominalData);  // build classifier and train on dataset
             }
 
             // Get all posts to split into sentences and then categorise.

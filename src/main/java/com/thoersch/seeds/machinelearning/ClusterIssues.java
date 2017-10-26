@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import weka.clusterers.ClusterEvaluation;
 import weka.clusterers.DBSCAN;
@@ -54,7 +55,9 @@ public class ClusterIssues {
             dbscan.buildClusterer(data);
             evaluation.setClusterer(dbscan);
             evaluation.evaluateClusterer(data);
-            System.out.println("num of clusters: " + evaluation.getNumClusters());
+            double[] assignments = evaluation.getClusterAssignments();
+            System.out.println("cluster assignment: " + assignments.toString());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
