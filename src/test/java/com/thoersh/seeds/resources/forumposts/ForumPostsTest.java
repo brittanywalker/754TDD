@@ -126,9 +126,24 @@ public class ForumPostsTest {
      * TEST ID: 8.3
      * Administrator attempts to remove forum post from cluster when it is not in it
      */
-    @Test
+    @Test (expected = /*ExceptionThatShouldArise*/.class)
     public void testRemovePostFromClusterItDoesNotBelongTo() {
+        // Would arise exception if trying to remove a post that doesn't exist.
+        List<Issue> issues = issuesResource.getIssues();
+        Issue issue = issuesResource.getIssue(1l);
+        ForumPost toRemove = issue.getForumPosts().get(0);
+        ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
+                toRemove.get_question_id(),
+                adminUser.getId(),
+                issue.getId()
+        ));
 
+        // Removing twice will provide an issue that is no longer in said cluster.
+        ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
+                toRemove.get_question_id(),
+                adminUser.getId(),
+                issue.getId()
+        ));
     }
 
     /**
