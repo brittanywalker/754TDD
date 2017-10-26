@@ -34,8 +34,9 @@ public class Application {
 
         new SpringApplicationBuilder(Application.class).properties(properties).showBanner(false).run(args);
 
-        ClusterIssues clusterIssues = new ClusterIssues();
-        clusterIssues.main();
+//        Machine Learning code exists but isn't fully working
+//        ClusterIssues clusterIssues = new ClusterIssues();
+//        clusterIssues.main();
     }
 
     @Bean
