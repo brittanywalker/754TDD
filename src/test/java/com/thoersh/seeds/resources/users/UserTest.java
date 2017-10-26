@@ -88,24 +88,24 @@ public class UserTest {
     }
 
     /**
-     * TEST ID: 2.2.1
+     * TEST ID: 3.1.1
      *
      * Test for a successful developer login
      */
     @Test
-    public void testDeveloperLogin(){
+    public void successfulDeveloperUserLoginTest(){
         ResponseEntity actual = usersResourceMock.authUser(userLogin);
         ResponseEntity<String> expected = new ResponseEntity<>("UserID: 1, Role: developer", HttpStatus.ACCEPTED);
         assertEquals(expected, actual);
     }
 
     /**
-     * TEST ID: 2.2.2 / 3.2.2
+     * TEST ID: 3.1.2 / 3.2.2
      *
-     * Test for unsuccessful login
+     * Test for unsuccessful login of a non-specific user using the wrong login credentials
      */
     @Test
-    public void testUnsuccessfulLogin(){
+    public void unsuccessfulGeneralUserLoginWithTheWrongCredentialsTest(){
         ResponseEntity actual = usersResourceMock.authUser(incorrectLogin);
         ResponseEntity<String> expected = new ResponseEntity<>("Unauthorised", HttpStatus.UNAUTHORIZED);
         assertEquals(expected, actual);
@@ -117,7 +117,7 @@ public class UserTest {
      * Test for successful admin login
      */
     @Test
-    public void testAdminLogin() {
+    public void successfulAdminUserLoginTest() {
         ResponseEntity actual = usersResourceMock.authUser(userAdminLogin);
         ResponseEntity<String> expected = new ResponseEntity<>("UserID: 2, Role: admin", HttpStatus.ACCEPTED);
         assertEquals(expected, actual);
