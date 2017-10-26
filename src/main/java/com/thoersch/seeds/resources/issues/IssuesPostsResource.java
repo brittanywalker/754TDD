@@ -34,7 +34,12 @@ public class IssuesPostsResource {
 
     @GET
     public List<ForumPost> getForumPosts(@PathParam("issueId") long issueId) {
+        Issue issue = issuesRepository.findOne(issueId);
+        if(issue == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
 
+        return issue.getForumPosts();
     }
 
     @POST
