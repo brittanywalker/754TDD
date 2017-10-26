@@ -65,7 +65,7 @@ public class UserTest {
      * Tests a user registration worked
      */
     @Test
-    public void testUserRegistration(){
+    public void successfulUserRegistrationTest(){
         usersResourceMock.saveUser(user);
         User actual = usersResourceMock.getUser("js@gmail.com");
         assertEquals(user, actual);
@@ -74,10 +74,10 @@ public class UserTest {
     /**
      * TEST ID: 2.1.2
      *
-     * Tess for a failed user registration, existing email
+     * Tests for a user registration where the email being registered is already registered into the database.
      */
     @Test
-    public void testExistingEmailRegistration(){
+    public void userRegistrationFailureDueToExistingRegisteredEmailTest(){
         usersResourceMock.saveUser(user);
         try{
             usersResourceMock.saveUser(userAdmin);
