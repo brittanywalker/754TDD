@@ -61,11 +61,25 @@ public class IssuesPostsResource {
 
         issuesRepository.save(issue);
 
-        return new ResponseEntity<>("UserID: " +user.getId() + " added forum post: "+toAdd.getId() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("UserID: " +user.getId() + " added forum post: "+toAdd.get_question_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
     }
 
     @POST
     public ResponseEntity removePostFromIssue(@Valid ForumPostCategorizeForm issueCategorizeForm) {
+        Issue issue = issuesRepository.findOne(issueCategorizeForm.getIssueId());
+        ForumPost toRemove = forumPostsRepository.getOne(issueCategorizeForm.getIssueId());
+        User user = usersRepository.getOne(issueCategorizeForm.getAssignerId());
+
+        //if user is not admin, do not allow
+        if (user.getRole() != User.UserRole.admin) {
+            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+        }
+
+        issue.removeForumPost(toRemove);
+
+        issuesRepository.save(issue);
+
+        return new ResponseEntity<>("UserID: " +user.getId() + " removed forum post: "+toRemove.get_question_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
 
     }
 
