@@ -12,4 +12,4 @@ before_install:
   - mvn liquibase:update -P local
 
 addons:
-  postgresql: "9.4"
+  postgresql: "9.6"
