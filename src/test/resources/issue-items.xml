@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <Issues id="1" title="A_Title_FIRST" description="B_DESC_MIDDLE" status="PENDING"/>
-    <Issues id="2" title="B_Title_2" description="A_DESC_FIRST" status="PENDING"/>
-    <Issues id="3" title="Z_Title_LAST" description="Z_DESC_LAST" status="PENDING"/>
+    <Issues id="1" title="A_Title_FIRST" description="B_DESC_MIDDLE" status="PENDING" priority="0"/>
+    <Issues id="2" title="B_Title_2" description="A_DESC_FIRST" status="PENDING" priority="0"/>
+    <Issues id="3" title="Z_Title_LAST" description="Z_DESC_LAST" status="PENDING" priority="0"/>
 
     <users id="1" first_name="Harry" last_name="Jackson" email_address="hj@gmail.com"
            profile_picture="face.png" password="q" role="developer"/>
@@ -10,4 +10,13 @@
            profile_picture="face.png" password="q" role="admin"/>
     <users id="3" first_name="Mira" last_name="Mira" email_address="ml@gmail.com"
            profile_picture="face.png" password="q1" role="developer"/>
+
+    <ForumPosts id="1" forum_details_id="2286" text="xero-php API, how to structure query" date="2017-06-01 00:00:00" author="Rajiv Pardiwala" content="I&apos;m try to request bank transactions from a specific account from a certain date using the xero-php API.$xero = new PrivateApplication($config);print_r(  $xero-&gt;load(&apos;Accounting\BankTransaction&apos;)-&gt;setParameter(&apos;AccountID&apos;,&apos;XXXXXXX-4097-4028-9b99-XXXXXXXXX&apos;)-&gt;fromDate(new DateTime(&apos;2016-06-01 00:00:00&apos;))-&gt;execute());which becomes this:&quot;https://api.xero.com/api.xro/2.0/BankTransactions?AccountID=XXXXXXX-4097-4028-9b99-XXXXXXXXX&amp;fromDate=2016-06-01&quot;however, it is not filtering by AccountID and instead returns transactions for both of my accounts.  The fromDate is ignored as well.  What is the correct url to do what I want?" url="https://community.xero.com/developer/discussion/50795838/" />
+    <ForumPosts id="2" forum_details_id="2286" text="Delivery Address on Invoice" date="2017-05-31 00:00:00" author="Sam Jones" content="Hi,I am wondering if it is possible to add a Delivery Address to an invoice. We have suppliers with multiple, constantly in use, delivery address. We need to add this address onto the invoice in some way so the supplier knows what address it was for.I know in the docs it states &quot;It is not possible to manually override the address on a per-invoice basis.&quot; but does anyone know a way around this or an alternative solution to record the address on an invoice?ThanksSam" url="https://community.xero.com/developer/discussion/50739864/" />
+    <ForumPosts id="3" forum_details_id="2286" text="Getting zero dollar value categories included in Profit and Loss Report" date="2017-05-09 00:00:00" author="stu barr" content="I am having trouble when I GET a Profit and Loss report through the api. It gets all rows that have a dollar value greater then zero but does not include any rows with a zero dollar value. Is it possible to include all rows even if they have a zero dollar value in the profit and loss report? Cheers" url="https://community.xero.com/developer/discussion/49157379/"/>
+
+    <!--<forumposts_issues forumpost_id="1" issue_id="1"/>-->
+    <!--<forumposts_issues forumpost_id="2" issue_id="1"/>-->
+    <!--<forumposts_issues forumpost_id="3" issue_id="2"/>-->
+
 </dataset>

@@ -224,7 +224,7 @@ public class ForumPostsTest {
             Issue issue = issuesResource.getIssue(1L);
             ForumPost toRemove = issue.getForumPosts().get(0);
 
-            postsResource.removePostFromIssue(new ForumPostCategorizeForm( toRemove.get_question_id(), user.getId(), issue.getId()));
+            postsResource.removePostFromIssue(new ForumPostCategorizeForm( toRemove.get_id(), user.getId(), issue.getId()));
         } catch (WebApplicationException e) {
             assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
             throw e;

@@ -44,6 +44,12 @@ public class Issue {
 
     private int priority = 0;
 
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "forumposts_issues", inverseJoinColumns = @JoinColumn(name = "forumpost_id", updatable = false, nullable = false),
+            joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
+    private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
+
     public Long getId() {
         return id;
     }
@@ -60,17 +66,13 @@ public class Issue {
         this.title = title;
     }
 
-    @NotNull
-    @ManyToMany
-    private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         if (description.length() == 0 || description.length() > 1000) {
-            throw new IllegalArgumentException("Details should have a word count of 1000");
+            throw new IllegalArgumentException("Details should have a maximum word count of 1000");
         }
 
         this.description = description;
@@ -113,23 +115,20 @@ public class Issue {
         return assignees;
     }
 
-    public void addAssignee(User assignee) { //TODO change the class
-        this.assignees.add(assignee);
-    }
-
     public List<ForumPost> getForumPosts() {
         return forumPosts;
     }
 
-    public List<ForumPost> addForumPost(ForumPost post) {
-        forumPosts.add(post);
-        return forumPosts;
+    public void addForumPost(ForumPost post) {
+        this.forumPosts.add(post);
+        this.priority++;
     }
 
     public List<ForumPost> removeForumPost(ForumPost post) {
         for (ForumPost p : forumPosts) {
-            if (post.get_id() == p.get_id()) {
+            if (Objects.equals(post.get_id(), p.get_id())) {
                 forumPosts.remove(p);
+                this.priority--;
             }
         }
         return forumPosts;

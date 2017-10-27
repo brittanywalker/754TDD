@@ -49,8 +49,8 @@ public class IssuesPostsResource {
     @POST
     public ResponseEntity addPostToIssue(@Valid ForumPostCategorizeForm issueCategorizeForm) {
         Issue issue = issuesRepository.findOne(issueCategorizeForm.getIssueId());
-        ForumPost toAdd = forumPostsRepository.getOne(issueCategorizeForm.getIssueId());
-        User user = usersRepository.getOne(issueCategorizeForm.getAssignerId());
+        ForumPost toAdd = forumPostsRepository.findOne(issueCategorizeForm.getForumPostId());
+        User user = usersRepository.findOne(issueCategorizeForm.getAssignerId());
 
         //if user is not admin, do not allow
         if (user.getRole() != User.UserRole.admin) {
@@ -58,18 +58,17 @@ public class IssuesPostsResource {
         }
 
         issue.addForumPost(toAdd);
-        issue.setPriority(issue.getPriority() + 1); //increase priority
 
         issuesRepository.save(issue);
 
         return new ResponseEntity<>("UserID: " +user.getId() + " added forum post: "+toAdd.get_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
     }
 
-    @POST
+    @DELETE
     public ResponseEntity removePostFromIssue(@Valid ForumPostCategorizeForm issueCategorizeForm) {
         Issue issue = issuesRepository.findOne(issueCategorizeForm.getIssueId());
-        ForumPost toRemove = forumPostsRepository.getOne(issueCategorizeForm.getIssueId());
-        User user = usersRepository.getOne(issueCategorizeForm.getAssignerId());
+        ForumPost toRemove = forumPostsRepository.findOne(issueCategorizeForm.getForumPostId());
+        User user = usersRepository.findOne(issueCategorizeForm.getAssignerId());
 
         //if user is not admin, do not allow
         if (user.getRole() != User.UserRole.admin) {
@@ -77,7 +76,6 @@ public class IssuesPostsResource {
         }
 
         issue.removeForumPost(toRemove);
-        issue.setPriority(issue.getPriority() - 1); //decrease priority
 
         issuesRepository.save(issue);
 
