@@ -58,6 +58,7 @@ public class IssuesPostsResource {
         }
 
         issue.addForumPost(toAdd);
+        issue.setPriority(issue.getPriority() + 1); //increase priority
 
         issuesRepository.save(issue);
 
@@ -76,6 +77,7 @@ public class IssuesPostsResource {
         }
 
         issue.removeForumPost(toRemove);
+        issue.setPriority(issue.getPriority() - 1); //decrease priority
 
         issuesRepository.save(issue);
 

@@ -346,15 +346,4 @@ public class IssuesTest {
             throw e;
         }
     }
-
-    /**
-     * TEST ID :
-     *
-     */
-    @Test
-    public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
-        final Issue issue = issuesResource.getIssue(1);
-        assertTrue(issue.getNumberOfRelatedIssues() > 0);
-    }
-
 }

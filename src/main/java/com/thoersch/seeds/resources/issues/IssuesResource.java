@@ -37,6 +37,12 @@ public class IssuesResource {
     }
 
 
+    /**
+     * Sorts issue by the param name
+     * Valid params are - title, description and priority
+     * @param sortBy
+     * @return
+     */
     @GET
     @Path("/sort/{sort}")
     public List<Issue> getIssues(@PathParam("sort") String sortBy) {

@@ -42,6 +42,8 @@ public class Issue {
             joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
     private List<User> assignees = new ArrayList<User>();
 
+    private int priority = 0;
+
     public Long getId() {
         return id;
     }
@@ -72,10 +74,6 @@ public class Issue {
         }
 
         this.description = description;
-    }
-
-    public int getNumberOfRelatedIssues() {
-        return 8;
     }
 
     public IssueStatus getStatus() {
@@ -137,4 +135,11 @@ public class Issue {
         return forumPosts;
     }
 
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
 }
