@@ -106,7 +106,7 @@ public class IssuesTest {
      * marked as completed
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssigneeWhenIssueIsCompleted() {
+    public void unsuccessfulAssigneeAdditionToResolvedIssueTest() {
         final Issue issue = new Issue();
         User assignee = usersResource.getUser(1);
         User admin = usersResource.getUser(2);
@@ -121,7 +121,7 @@ public class IssuesTest {
      * marked as rejected
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssigneeWhenIssueIsRejected() {
+    public void unsuccessfulAssigneeAdditionToRejectedIssueTest() {
         final Issue issue = new Issue();
         User assignee = usersResource.getUser(1);
         User admin = usersResource.getUser(2);
@@ -135,7 +135,7 @@ public class IssuesTest {
      * Tests if admin users can add new assignees for an issue
      */
     @Test
-    public void testAddAssigneeAsAnAdmin() {
+    public void successfulAssigneeAdditionByAdmin() {
         final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
@@ -159,7 +159,7 @@ public class IssuesTest {
      * assignees
      */
     @Test(expected = WebApplicationException.class)
-    public void testAddAssigneeAsADeveloper() {
+    public void unsuccessfulAssigneeAdditionByDeveloperTest() {
         final User dev1 = usersResource.getUser(USER_ID_DEV_1);
         assertTrue(dev1.getRole() != User.UserRole.admin);
 
