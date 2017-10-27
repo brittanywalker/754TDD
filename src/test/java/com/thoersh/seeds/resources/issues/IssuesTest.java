@@ -212,7 +212,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
      */
     @Test
-    public void testSortIssuesByPriority() {
+    public void successfulIssueSortByPriority() {
         //I am still working on this in IssueAdditions branch
     }
 
