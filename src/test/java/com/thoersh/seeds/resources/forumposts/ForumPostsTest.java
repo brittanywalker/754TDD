@@ -30,8 +30,11 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -74,8 +77,7 @@ public class ForumPostsTest {
         Mockito.when(adminUser.getRole()).thenReturn(User.UserRole.admin);
 
     }
-
-
+    
     /**
      * TEST ID: 8.1
      * Administrator can remove forum post from a cluster with more than one post
@@ -185,6 +187,7 @@ public class ForumPostsTest {
      * TEST ID: 8.3
      * Administrator attempts to remove forum post from cluster when it is not in it
      */
+    @Test
     public void testRemovePostFromClusterItDoesNotBelongTo() {
         // Would arise exception if trying to remove a post that doesn't exist.
         Issue issue = issuesResource.getIssue(1l);
@@ -211,8 +214,21 @@ public class ForumPostsTest {
      * TEST ID: 8.4
      * Developer attempt to remove forum post from cluster (disallowed, insufficient privileges)
      */
-    @Test
-    public void testRemovePostFromClusterAsDev() {
+    @Test(expected = WebApplicationException.class)
+    public void testDeveloperRemoveForumPost() {
+        final User user = Mockito.mock(User.class);
+        Mockito.when(user.getRole()).thenReturn(User.UserRole.developer);
+        Mockito.when(user.getId()).thenReturn(Mockito.anyLong());
 
+        try {
+            //Get the first post in it and try to remove it
+            Issue issue = issuesResource.getIssue(1L);
+            ForumPost toRemove = issue.getForumPosts().get(0);
+
+            postsResource.removePostFromIssue(new ForumPostCategorizeForm( toRemove.get_question_id(), user.getId(), issue.getId()));
+        } catch (WebApplicationException e) {
+            assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
+            throw e;
+        }
     }
 }
