@@ -184,7 +184,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the name
      */
     @Test
-    public void testSortingIssuesByTitle() {
+    public void successfulIssueSortByTitle() {
         final List<Issue> issues = issuesResource.getIssues("title");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
@@ -198,7 +198,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the description
      */
     @Test
-    public void testSortIssuesByDescription() {
+    public void successfulIssueSortByDescription() {
         final List<Issue> issues = issuesResource.getIssues("description");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
