@@ -135,7 +135,7 @@ public class IssuesTest {
      * Tests if admin users can add new assignees for an issue
      */
     @Test
-    public void successfulAssigneeAdditionByAdmin() {
+    public void successfulAssigneeAdditionByAdminTest() {
         final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
@@ -184,7 +184,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the name
      */
     @Test
-    public void successfulIssueSortByTitle() {
+    public void successfulIssueSortByTitleTest() {
         final List<Issue> issues = issuesResource.getIssues("title");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
@@ -198,7 +198,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the description
      */
     @Test
-    public void successfulIssueSortByDescription() {
+    public void successfulIssueSortByDescriptionTest() {
         final List<Issue> issues = issuesResource.getIssues("description");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
@@ -212,7 +212,7 @@ public class IssuesTest {
      * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
      */
     @Test
-    public void successfulIssueSortByPriority() {
+    public void successfulIssueSortByPriorityTest() {
         //I am still working on this in IssueAdditions branch
     }
 
@@ -222,7 +222,7 @@ public class IssuesTest {
      * Test if an admin can mark an issue as resolved
      */
     @Test
-    public void testIfAdminCanMarkAnIssueAsResolved() {
+    public void successfulMarkingIssueAsResolvedByAdminTest() {
         final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
@@ -238,7 +238,7 @@ public class IssuesTest {
      * Test if a developer who is assigned to an issue can mark it as resolved
      */
     @Test
-    public void testIfDeveloperAssignedToAnIssueCanMarkItAsResolved() {
+    public void successfulDeveloperMarkingAssignedIssueAsResolvedTest() {
         final User devAssigned = usersResource.getUser(USER_ID_DEV_1);
         final User admin = usersResource.getUser(USER_ID_ADMIN);
 
@@ -258,12 +258,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.3.1
+     * TEST ID : 12.3
      *
      * Test if a developer who is not assigned to an issue can mark it as resolved
      */
     @Test(expected = WebApplicationException.class)
-    public void testIfDeveloperNotAssignedToAnIssueCanMarkItAsResolved() {
+    public void unsuccessfulDevelopedMarkingUnassignedIssueAsResolvedTest() {
         final User devUnassigned = usersResource.getUser(USER_ID_DEV_2);
         final User admin = usersResource.getUser(USER_ID_ADMIN);
 
