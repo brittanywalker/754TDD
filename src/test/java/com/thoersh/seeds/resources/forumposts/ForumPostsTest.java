@@ -67,12 +67,11 @@ public class ForumPostsTest {
     private ForumPostsRepository forumPostsRepository;
 
     private ForumPostsResource resource;
-
     private IssuesResource issuesResource;
-
     private IssuesPostsResource postsResource;
 
     private User adminUser;
+    private User devUser;
 
     @Before
     public void init() {
@@ -80,7 +79,10 @@ public class ForumPostsTest {
         this.issuesResource = new IssuesResource(issuesRepo);
         this.postsResource = new IssuesPostsResource(issuesRepo, forumPostsRepository, usersRepository);
 
-        adminUser = new UsersResource(usersRepository).getUser(1L);
+        final UsersResource usersResource = new UsersResource(usersRepository);
+        adminUser = usersResource.getUser(1L);
+        devUser = usersResource.getUser(2L);
+
     }
     
     /**
@@ -217,16 +219,12 @@ public class ForumPostsTest {
      */
     @Test(expected = WebApplicationException.class)
     public void testDeveloperRemoveForumPost() {
-        final User user = Mockito.mock(User.class);
-        Mockito.when(user.getRole()).thenReturn(User.UserRole.developer);
-        Mockito.when(user.getId()).thenReturn(Mockito.anyLong());
-
         try {
             //Get the first post in it and try to remove it
-            Issue issue = issuesResource.getIssue(1L);
+            Issue issue = issuesResource.getIssue(3L);
             ForumPost toRemove = issue.getForumPosts().get(0);
 
-            postsResource.removePostFromIssue(new ForumPostCategorizeForm( toRemove.get_id(), user.getId(), issue.getId()));
+            postsResource.removePostFromIssue(new ForumPostCategorizeForm( toRemove.get_id(), devUser.getId(), issue.getId()));
         } catch (WebApplicationException e) {
             assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
             throw e;
