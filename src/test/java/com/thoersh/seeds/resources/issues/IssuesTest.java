@@ -74,10 +74,10 @@ public class IssuesTest {
     /**
      * TEST ID : 5.1.1
      *
-     * Tests if the issue summery is less than 1000 characters
+     * Tests that if the summary is more than 1000 characters an exception will fire
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIfSummeryOfIssueIsNotLengthy() {
+    public void unsuccessfulIssueSummaryIsOver1000Test() {
         final Issue issue = Mockito.spy(new Issue());
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
@@ -100,7 +100,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.2.1
+     * TEST ID : 5.2
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as completed
@@ -115,7 +115,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.3.1
+     * TEST ID : 5.3
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as rejected
@@ -130,7 +130,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.4.1
+     * TEST ID : 5.4
      *
      * Tests if admin users can add new assignees for an issue
      */
@@ -152,7 +152,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.5.1
+     * TEST ID : 5.5
      *
      * Tests if developer can add new assignees for an issue.
      * This test should fail since developers are not allowed to add new
@@ -179,7 +179,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.1.1
+     * TEST ID : 6.1
      *
      * Test if the issues can be sorted by the name
      */
@@ -193,7 +193,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.2.1
+     * TEST ID : 6.2
      *
      * Test if the issues can be sorted by the description
      */
@@ -207,7 +207,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.3.1
+     * TEST ID : 6.3
      *
      * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
      */
@@ -217,7 +217,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.1.1
+     * TEST ID : 12.1
      *
      * Test if an admin can mark an issue as resolved
      */
@@ -233,7 +233,7 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.2.1
+     * TEST ID : 12.2
      *
      * Test if a developer who is assigned to an issue can mark it as resolved
      */
