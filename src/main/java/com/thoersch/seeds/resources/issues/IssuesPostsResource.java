@@ -61,7 +61,7 @@ public class IssuesPostsResource {
 
         issuesRepository.save(issue);
 
-        return new ResponseEntity<>("UserID: " +user.getId() + " added forum post: "+toAdd.get_question_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("UserID: " +user.getId() + " added forum post: "+toAdd.get_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
     }
 
     @POST
@@ -79,7 +79,7 @@ public class IssuesPostsResource {
 
         issuesRepository.save(issue);
 
-        return new ResponseEntity<>("UserID: " +user.getId() + " removed forum post: "+toRemove.get_question_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("UserID: " +user.getId() + " removed forum post: "+toRemove.get_id() + " to issue: " + issue.getId(), HttpStatus.ACCEPTED);
 
     }
 

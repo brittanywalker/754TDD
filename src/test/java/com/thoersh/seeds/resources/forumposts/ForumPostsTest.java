@@ -91,7 +91,7 @@ public class ForumPostsTest {
         //Get the first post in it and try to remove it
         ForumPost toRemove = issue.getForumPosts().get(0);
         ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
-                toRemove.get_question_id(),
+                toRemove.get_id(),
                 adminUser.getId(),
                 issue.getId()
         ));
@@ -145,7 +145,7 @@ public class ForumPostsTest {
         //Get the only post in it and try to remove it
         ForumPost toRemove = issue.getForumPosts().get(0);
         ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
-                toRemove.get_question_id(),
+                toRemove.get_id(),
                 adminUser.getId(),
                 issue.getId()
         ));
@@ -193,14 +193,14 @@ public class ForumPostsTest {
         Issue issue = issuesResource.getIssue(1l);
         ForumPost toRemove = issue.getForumPosts().get(0);
         ResponseEntity test = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
-                toRemove.get_question_id(),
+                toRemove.get_id(),
                 adminUser.getId(),
                 issue.getId()
         ));
 
         // Removing twice will provide an issue that is no longer in said cluster.
         ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
-                toRemove.get_question_id(),
+                toRemove.get_id(),
                 adminUser.getId(),
                 issue.getId()
         ));
