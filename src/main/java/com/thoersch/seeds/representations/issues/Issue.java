@@ -128,7 +128,7 @@ public class Issue {
 
     public List<ForumPost> removeForumPost(ForumPost post) {
         for (ForumPost p : forumPosts) {
-            if (post.get_question_id() == p.get_question_id()) {
+            if (post.get_id() == p.get_id()) {
                 forumPosts.remove(p);
             }
         }
