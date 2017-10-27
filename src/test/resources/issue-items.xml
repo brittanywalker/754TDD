@@ -15,8 +15,4 @@
     <ForumPosts id="2" forum_details_id="2286" text="Delivery Address on Invoice" date="2017-05-31 00:00:00" author="Sam Jones" content="Hi,I am wondering if it is possible to add a Delivery Address to an invoice. We have suppliers with multiple, constantly in use, delivery address. We need to add this address onto the invoice in some way so the supplier knows what address it was for.I know in the docs it states &quot;It is not possible to manually override the address on a per-invoice basis.&quot; but does anyone know a way around this or an alternative solution to record the address on an invoice?ThanksSam" url="https://community.xero.com/developer/discussion/50739864/" />
     <ForumPosts id="3" forum_details_id="2286" text="Getting zero dollar value categories included in Profit and Loss Report" date="2017-05-09 00:00:00" author="stu barr" content="I am having trouble when I GET a Profit and Loss report through the api. It gets all rows that have a dollar value greater then zero but does not include any rows with a zero dollar value. Is it possible to include all rows even if they have a zero dollar value in the profit and loss report? Cheers" url="https://community.xero.com/developer/discussion/49157379/"/>
 
-    <!--<forumposts_issues forumpost_id="1" issue_id="1"/>-->
-    <!--<forumposts_issues forumpost_id="2" issue_id="1"/>-->
-    <!--<forumposts_issues forumpost_id="3" issue_id="2"/>-->
-
 </dataset>

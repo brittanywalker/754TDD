@@ -7,6 +7,7 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.thoersch.seeds.Application;
 import com.thoersch.seeds.persistence.forumposts.ForumPostsRepository;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
+import com.thoersch.seeds.persistence.users.UsersRepository;
 import com.thoersch.seeds.representations.forumposts.ForumPost;
 import com.thoersch.seeds.representations.forumposts.ForumPostCategorizeForm;
 import com.thoersch.seeds.representations.issues.Issue;
@@ -14,6 +15,7 @@ import com.thoersch.seeds.representations.users.User;
 import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
 import com.thoersch.seeds.resources.issues.IssuesPostsResource;
 import com.thoersch.seeds.resources.issues.IssuesResource;
+import com.thoersch.seeds.resources.users.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +60,12 @@ public class ForumPostsTest {
     @Autowired
     private IssuesRepository issuesRepo;
 
+    @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private ForumPostsRepository forumPostsRepository;
+
     private ForumPostsResource resource;
 
     private IssuesResource issuesResource;
@@ -70,11 +78,9 @@ public class ForumPostsTest {
     public void init() {
         this.resource = new ForumPostsResource(repo);
         this.issuesResource = new IssuesResource(issuesRepo);
+        this.postsResource = new IssuesPostsResource(issuesRepo, forumPostsRepository, usersRepository);
 
-        //set up mock admin user
-        adminUser = Mockito.mock(User.class);
-        Mockito.when(adminUser.getRole()).thenReturn(User.UserRole.admin);
-
+        adminUser = new UsersResource(usersRepository).getUser(1L);
     }
     
     /**
@@ -84,19 +90,15 @@ public class ForumPostsTest {
     @Test
     public void testAdminRemoveForumPost() {
         //Get an issue that has multiple posts in it
-        List<Issue> issues = issuesResource.getIssues();
         Issue issue = issuesResource.getIssue(1l);
 
         //Get the first post in it and try to remove it
         ForumPost toRemove = issue.getForumPosts().get(0);
-        ResponseEntity actual = postsResource.removePostFromIssue(new ForumPostCategorizeForm(
-                toRemove.get_id(),
-                adminUser.getId(),
-                issue.getId()
-        ));
 
+        final ForumPostCategorizeForm form = new ForumPostCategorizeForm(toRemove.get_id(), adminUser.getId(), issue.getId());
+        ResponseEntity actual = postsResource.removePostFromIssue(form);
 
-        if (actual.getStatusCode() != HttpStatus.ACCEPTED) {
+        if (actual.getStatusCode().value() != HttpStatus.ACCEPTED.value()) {
             fail("Could not remove forum post from cluster, response: \n" + actual.getBody());
         }
 
@@ -109,7 +111,7 @@ public class ForumPostsTest {
 
         //post must be moved to at least ONE (new) issue, and must be only post in issue.
         //confirm that removed forum post has been put into own issue/cluster.
-        issues = issuesResource.getIssues();
+        List<Issue> issues = issuesResource.getIssues();
         Integer presenceCount = 0; //how many times post appears in issues, in general
         Integer singlePostIssueCount = 0; //how many times post appears as only post in issue
         for (Issue i : issues) {

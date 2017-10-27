@@ -226,8 +226,6 @@ public class IssuesTest {
      */
     @Test
     public void successfulIssueSortByPriorityTest() {
-        forumPostsResource.getForumPosts();
-
         final ForumPost post1 = forumPostsResource.getForumPost(1L);
         final ForumPost post2 = forumPostsResource.getForumPost(2L);
         final ForumPost post3 = forumPostsResource.getForumPost(3L);

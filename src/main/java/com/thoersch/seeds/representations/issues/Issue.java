@@ -125,12 +125,8 @@ public class Issue {
     }
 
     public List<ForumPost> removeForumPost(ForumPost post) {
-        for (ForumPost p : forumPosts) {
-            if (Objects.equals(post.get_id(), p.get_id())) {
-                forumPosts.remove(p);
-                this.priority--;
-            }
-        }
+        this.forumPosts.removeIf(post1 -> Objects.equals(post1.get_id(), post.get_id()));
+
         return forumPosts;
     }
 
