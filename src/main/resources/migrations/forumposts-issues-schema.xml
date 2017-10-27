@@ -28,7 +28,7 @@
         </createTable>
 
         <addForeignKeyConstraint baseColumnNames="issue_id" baseTableName="forumposts_issues" baseTableSchemaName="public" constraintName="fk_forumposts_issues__issues" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="issues" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
-        <addForeignKeyConstraint baseColumnNames="forumpost_id" baseTableName="forumposts_issues" baseTableSchemaName="public" constraintName="fk_forumposts_issues__forumposts" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="ForumPosts" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
+        <addForeignKeyConstraint baseColumnNames="forumpost_id" baseTableName="forumposts_issues" baseTableSchemaName="public" constraintName="fk_forumposts_issues__forumposts" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="forumposts" referencedTableSchemaName="public" referencesUniqueColumn="false"/>
 
         <addUniqueConstraint tableName="forumposts_issues" columnNames="forumpost_id, issue_id" constraintName="uq_forumposts_issues__user_id_issue_id" deferrable="false" disabled="false" initiallyDeferred="false"/>
     </changeSet>
