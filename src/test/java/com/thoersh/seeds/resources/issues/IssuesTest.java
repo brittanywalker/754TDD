@@ -207,6 +207,16 @@ public class IssuesTest {
     }
 
     /**
+     * TEST ID : 6.3.1
+     *
+     * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
+     */
+    @Test
+    public void testSortIssuesByPriority() {
+        //I am still working on this in IssueAdditions branch
+    }
+
+    /**
      * TEST ID : 12.1.1
      *
      * Test if an admin can mark an issue as resolved
