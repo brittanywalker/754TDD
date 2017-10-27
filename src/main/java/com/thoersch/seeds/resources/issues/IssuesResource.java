@@ -37,10 +37,22 @@ public class IssuesResource {
     }
 
 
+    /**
+     * Sorts issue by the param name
+     * Valid params are - title, description and priority
+     * @param sortBy
+     * @return
+     */
     @GET
     @Path("/sort/{sort}")
     public List<Issue> getIssues(@PathParam("sort") String sortBy) {
-        final Sort sort = new Sort(sortBy);
+        final Sort sort;
+        if ("priority".equals(sortBy)) {
+            sort = new Sort(Sort.Direction.DESC, sortBy); //Get the post with highest priority first
+        } else {
+            sort = new Sort(sortBy);
+        }
+
         return issuesRepository.findAll(sort);
     }
 

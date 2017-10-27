@@ -5,11 +5,16 @@ import com.github.springtestdbunit.annotation.DatabaseOperation;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DatabaseTearDown;
 import com.thoersch.seeds.Application;
+import com.thoersch.seeds.persistence.forumposts.ForumPostsRepository;
 import com.thoersch.seeds.persistence.issues.IssuesRepository;
 import com.thoersch.seeds.persistence.users.UsersRepository;
+import com.thoersch.seeds.representations.forumposts.ForumPost;
+import com.thoersch.seeds.representations.forumposts.ForumPostCategorizeForm;
 import com.thoersch.seeds.representations.issues.Issue;
 import com.thoersch.seeds.representations.issues.IssueAssignForm;
 import com.thoersch.seeds.representations.users.User;
+import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
+import com.thoersch.seeds.resources.issues.IssuesPostsResource;
 import com.thoersch.seeds.resources.issues.IssuesResource;
 import com.thoersch.seeds.resources.issues.IssuesUsersResource;
 import com.thoersch.seeds.resources.users.UsersResource;
@@ -30,6 +35,7 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -60,15 +66,22 @@ public class IssuesTest {
     @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private ForumPostsRepository forumPostsRepository;
+
     private IssuesResource issuesResource;
     private UsersResource usersResource;
     private IssuesUsersResource issuesUsersResource;
+    private IssuesPostsResource issuesPostsResource;
+    private ForumPostsResource forumPostsResource;
 
     @Before
     public void init() {
         this.issuesResource = new IssuesResource(issuesRepository);
         this.usersResource = new UsersResource(usersRepository);
+        this.forumPostsResource = new ForumPostsResource(forumPostsRepository);
         this.issuesUsersResource = new IssuesUsersResource(issuesRepository, usersRepository);
+        this.issuesPostsResource = new IssuesPostsResource(issuesRepository, forumPostsRepository, usersRepository);
     }
 
     /**
@@ -78,7 +91,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void unsuccessfulIssueSummaryIsOver1000Test() {
-        final Issue issue = Mockito.spy(new Issue());
+        final Issue issue = new Issue();
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
             builder.append("_test_|_test_");
@@ -95,7 +108,7 @@ public class IssuesTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void unsuccessfulIssueSummaryIsEmptyTest() {
-        final Issue issue = Mockito.spy(new Issue());
+        final Issue issue = new Issue();
         issue.setDescription("");
     }
 
@@ -213,7 +226,33 @@ public class IssuesTest {
      */
     @Test
     public void successfulIssueSortByPriorityTest() {
-        //I am still working on this in IssueAdditions branch
+        final ForumPost post1 = forumPostsResource.getForumPost(1L);
+        final ForumPost post2 = forumPostsResource.getForumPost(2L);
+        final ForumPost post3 = forumPostsResource.getForumPost(3L);
+
+        final Issue issue1 = issuesResource.getIssue(ISSUE_ID_01);
+        final Issue issue2 = issuesResource.getIssue(ISSUE_ID_03);
+
+        final ForumPostCategorizeForm form1ForIssue1 = new ForumPostCategorizeForm(post1.get_id(), USER_ID_ADMIN, issue1.getId());
+        final ForumPostCategorizeForm form2ForIssue1 = new ForumPostCategorizeForm(post2.get_id(), USER_ID_ADMIN, issue1.getId());
+        final ForumPostCategorizeForm form1ForIssue2 = new ForumPostCategorizeForm(post3.get_id(), USER_ID_ADMIN, issue2.getId());
+
+        //Add those to issues
+        issuesPostsResource.addPostToIssue(form1ForIssue1);
+        issuesPostsResource.addPostToIssue(form2ForIssue1);
+        issuesPostsResource.addPostToIssue(form1ForIssue2);
+
+        //Since Issue1 has more posts, if should be prioritized
+        final List<Issue> issues = issuesResource.getIssues("priority");
+        assertTrue(issues != null);
+        assertTrue(issues.size() > 0);
+        assertTrue(issues.get(0) != null);
+
+        assertTrue(issuesResource.getIssue(ISSUE_ID_01).getPriority() == 2);
+        assertTrue(issuesResource.getIssue(ISSUE_ID_02).getPriority() == 0);
+        assertTrue(issuesResource.getIssue(ISSUE_ID_03).getPriority() == 1);
+
+        assertEquals(issues.get(0).getId(), issue1.getId());
     }
 
     /**
@@ -356,15 +395,4 @@ public class IssuesTest {
             throw e;
         }
     }
-
-    /**
-     * TEST ID :
-     *
-     */
-    @Test
-    public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
-        final Issue issue = issuesResource.getIssue(1);
-        assertTrue(issue.getNumberOfRelatedIssues() > 0);
-    }
-
 }

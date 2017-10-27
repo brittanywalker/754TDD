@@ -42,6 +42,14 @@ public class Issue {
             joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
     private List<User> assignees = new ArrayList<User>();
 
+    private int priority = 0;
+
+    @NotNull
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "forumposts_issues", inverseJoinColumns = @JoinColumn(name = "forumpost_id", updatable = false, nullable = false),
+            joinColumns = @JoinColumn(name = "issue_id", updatable = false, nullable = false))
+    private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
+
     public Long getId() {
         return id;
     }
@@ -58,24 +66,16 @@ public class Issue {
         this.title = title;
     }
 
-    @NotNull
-    @ManyToMany
-    private List<ForumPost> forumPosts = new ArrayList<ForumPost>();
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         if (description.length() == 0 || description.length() > 1000) {
-            throw new IllegalArgumentException("Details should have a word count of 1000");
+            throw new IllegalArgumentException("Details should have a maximum word count of 1000");
         }
 
         this.description = description;
-    }
-
-    public int getNumberOfRelatedIssues() {
-        return 8;
     }
 
     public IssueStatus getStatus() {
@@ -115,8 +115,26 @@ public class Issue {
         return assignees;
     }
 
-    public void addAssignee(User assignee) { //TODO change the class
-        this.assignees.add(assignee);
+    public List<ForumPost> getForumPosts() {
+        return forumPosts;
     }
-    
+
+    public void addForumPost(ForumPost post) {
+        this.forumPosts.add(post);
+        this.priority++;
+    }
+
+    public List<ForumPost> removeForumPost(ForumPost post) {
+        this.forumPosts.removeIf(post1 -> Objects.equals(post1.get_id(), post.get_id()));
+
+        return forumPosts;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
 }

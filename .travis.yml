@@ -8,7 +8,8 @@ services:
 before_install:
   - psql -c "CREATE USER SpringBootUser WITH LOGIN PASSWORD 'SpringBootPass' SUPERUSER INHERIT CREATEDB NOCREATEROLE NOREPLICATION;" -U postgres
   - psql -c "CREATE DATABASE assignment754 WITH ENCODING='UTF8' OWNER=SpringBootUser CONNECTION LIMIT=-1;" -U postgres
+  - mvn liquibase:clearCheckSums
   - mvn liquibase:update -P local
 
 addons:
-  - postgresql: "9.4"
+  postgresql: "9.6"
