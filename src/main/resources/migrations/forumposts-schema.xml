@@ -21,7 +21,7 @@
             </column>
 
             <column name="date" type="DATE">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
 
             <column name="author" type="VARCHAR(256)">
