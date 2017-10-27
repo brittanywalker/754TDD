@@ -109,23 +109,15 @@ public class ForumPostsTest {
             fail("Forum post still in same issue.");
         }
 
-        //post must be moved to at least ONE (new) issue, and must be only post in issue.
-        //confirm that removed forum post has been put into own issue/cluster.
         List<Issue> issues = issuesResource.getIssues();
-        Integer presenceCount = 0; //how many times post appears in issues, in general
         Integer singlePostIssueCount = 0; //how many times post appears as only post in issue
         for (Issue i : issues) {
-            if(i.getForumPosts().contains(toRemove)) {
-                presenceCount++;
-            }
             if (i.getForumPosts().contains(toRemove) && i.getForumPosts().size() == 1) {
                 singlePostIssueCount++;
             }
         }
 
-        if (presenceCount == 0) {
-            fail("Forum post not present in any issues. Should be present in at least one.");
-        } else if (singlePostIssueCount > 1) {
+        if (singlePostIssueCount > 1) {
             fail("Too many issues where post is the only one.");
         }
     }
@@ -163,23 +155,15 @@ public class ForumPostsTest {
             fail("Forum post still in same issue.");
         }
 
-        //post must be moved to at least ONE (new) issue, and must be only post in issue.
-        //confirm that removed forum post has been put into own issue/cluster.
         issues = issuesResource.getIssues();
-        Integer presenceCount = 0; //how many times post appears in issues, in general
         Integer singlePostIssueCount = 0; //how many times post appears as only post in issue
         for (Issue i : issues) {
-            if(i.getForumPosts().contains(toRemove)) {
-                presenceCount++;
-            }
             if (i.getForumPosts().contains(toRemove) && i.getForumPosts().size() == 1) {
                 singlePostIssueCount++;
             }
         }
 
-        if (presenceCount == 0) {
-            fail("Forum post not present in any issues. Should be present in at least one.");
-        } else if (singlePostIssueCount > 1) {
+        if (singlePostIssueCount > 1) {
             fail("Too many issues where post is the only one.");
         }
     }
