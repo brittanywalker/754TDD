@@ -91,10 +91,10 @@ public class IssuesTest {
     /**
      * TEST ID : 5.1.2
      *
-     * Tests if the issue summery is not empty
+     * Tests the exception if the summary is empty.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIfSummeryOfIssueIsTooSmall() {
+    public void unsuccessfulIssueSummaryIsEmptyTest() {
         final Issue issue = Mockito.spy(new Issue());
         issue.setDescription("");
     }
