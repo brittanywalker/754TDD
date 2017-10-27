@@ -16,7 +16,7 @@ public class ForumPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long _question_id;
+    private Long _id;
 
     @NotNull
     private Integer _forum_details_id;
@@ -46,8 +46,8 @@ public class ForumPost {
         _url = url;
     }
 
-    public Long get_question_id() {
-        return _question_id;
+    public Long get_id() {
+        return _id;
     }
 
     public Integer get_forum_details_id() {
