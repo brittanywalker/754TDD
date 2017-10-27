@@ -99,26 +99,15 @@ public class AdminTest {
 //        assertEquals(Boolean.TRUE, actual);
 //    }
 
-    /**
-     * TEST ID: 10 / 10.2
-     *
-     * Admin assigns issue to a developer
-     */
-    @Test
-    public void testIssueAssign(){
-        Issue issue = issuesResource.getIssue(1);
-        User assignee = usersResourceMock.getUser(1);
-        User admin = usersResourceMock.getUser(2);
-        issue.addAssignee(assignee, admin);
-    }
+
 
     /**
      * TEST ID: 10.1
      *
-     * Non admin assigns issue to a developer
+     * Tests unsuccessful assignment of issue from nonAdmin user to another user. Throwing an illegal access error.
      */
     @Test(expected = IllegalAccessError.class)
-    public void testNonAdminIssueAssign(){
+    public void unsuccessfulIssueAssignmentFromNonAdminUserTest(){
         Issue issue = issuesResource.getIssue(1);
         User assignee = usersResourceMock.getUser(1);
         User nonAdmin = usersResourceMock.getUser(1);
@@ -126,12 +115,38 @@ public class AdminTest {
     }
 
     /**
-     * TEST ID: 11 / 11.2
+     * TEST ID: 10.2
      *
-     * Admin un-assigns an issue to a developer
+     * Tests successful assignment of issue from Admin to another user.
      */
     @Test
-    public void testRemoveIssue(){
+    public void successfulIssueAssignmentFromAdminToOtherUserTest(){
+        Issue issue = issuesResource.getIssue(1);
+        User assignee = usersResourceMock.getUser(1);
+        User admin = usersResourceMock.getUser(2);
+        issue.addAssignee(assignee, admin);
+    }
+
+    /**
+     * TEST ID: 11.1
+     *
+     * Tests a non-admin user un-assigning an issue for another user.
+     */
+    @Test(expected = IllegalAccessError.class)
+    public void unsuccessfulIssueUnAssignmentByADeveloperForAnotherUserTest(){
+        Issue issue = issuesResource.getIssue(2);
+        User assignee = usersResourceMock.getUser(1);
+        User nonAdmin = usersResourceMock.getUser(1);
+        Boolean success = issue.removeAssignee(assignee, nonAdmin);
+    }
+
+    /**
+     * TEST ID: 11.2
+     *
+     * Tests successful issue un-assignment by an Admin to other user.
+     */
+    @Test
+    public void successfulIssueUnAssignmentByAnAdminToAnotherUserTest(){
         Issue issue = issuesResource.getIssue(2);
         User assignee = usersResourceMock.getUser(1);
         User admin = usersResourceMock.getUser(2);
@@ -140,25 +155,13 @@ public class AdminTest {
     }
 
     /**
-     * TEST ID: 11.1
-     *
-     * Non-admin un-assigns an issue to a developer
-     */
-    @Test(expected = IllegalAccessError.class)
-    public void testNonAdminRemoveIssue(){
-        Issue issue = issuesResource.getIssue(2);
-        User assignee = usersResourceMock.getUser(1);
-        User nonAdmin = usersResourceMock.getUser(1);
-        Boolean success = issue.removeAssignee(assignee, nonAdmin);
-    }
-
-    /**
      * TEST ID: 11.3
      *
-     * Admin un-assigns an issue to a developer they arent assigned to
+     *
+     * Tests Admin un-assigns an issue to a developer they arent assigned to
      */
     @Test
-    public void testRemoveNonAssignedIssue(){
+    public void unsuccessfulIssueUnAssignmentByAdminThatIsNotAssignedToTheIssueTest(){
         Issue issue = issuesResource.getIssue(1);
         User assignee = usersResourceMock.getUser(1);
         User admin = usersResourceMock.getUser(2);

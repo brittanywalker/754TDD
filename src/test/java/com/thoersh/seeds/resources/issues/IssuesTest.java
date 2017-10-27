@@ -87,10 +87,10 @@ public class IssuesTest {
     /**
      * TEST ID : 5.1.1
      *
-     * Tests if the issue summery is less than 1000 characters
+     * Tests that if the summary is more than 1000 characters an exception will fire
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIfSummeryOfIssueIsNotLengthy() {
+    public void unsuccessfulIssueSummaryIsOver1000Test() {
         final Issue issue = new Issue();
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
@@ -104,22 +104,22 @@ public class IssuesTest {
     /**
      * TEST ID : 5.1.2
      *
-     * Tests if the issue summery is not empty
+     * Tests the exception if the summary is empty.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testIfSummeryOfIssueIsTooSmall() {
+    public void unsuccessfulIssueSummaryIsEmptyTest() {
         final Issue issue = new Issue();
         issue.setDescription("");
     }
 
     /**
-     * TEST ID : 5.2.1
+     * TEST ID : 5.2
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as completed
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssigneeWhenIssueIsCompleted() {
+    public void unsuccessfulAssigneeAdditionToResolvedIssueTest() {
         final Issue issue = new Issue();
         User assignee = usersResource.getUser(1);
         User admin = usersResource.getUser(2);
@@ -128,13 +128,13 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.3.1
+     * TEST ID : 5.3
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as rejected
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddAssigneeWhenIssueIsRejected() {
+    public void unsuccessfulAssigneeAdditionToRejectedIssueTest() {
         final Issue issue = new Issue();
         User assignee = usersResource.getUser(1);
         User admin = usersResource.getUser(2);
@@ -143,12 +143,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.4.1
+     * TEST ID : 5.4
      *
      * Tests if admin users can add new assignees for an issue
      */
     @Test
-    public void testAddAssigneeAsAnAdmin() {
+    public void successfulAssigneeAdditionByAdminTest() {
         final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
@@ -165,14 +165,14 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 5.5.1
+     * TEST ID : 5.5
      *
      * Tests if developer can add new assignees for an issue.
      * This test should fail since developers are not allowed to add new
      * assignees
      */
     @Test(expected = WebApplicationException.class)
-    public void testAddAssigneeAsADeveloper() {
+    public void unsuccessfulAssigneeAdditionByDeveloperTest() {
         final User dev1 = usersResource.getUser(USER_ID_DEV_1);
         assertTrue(dev1.getRole() != User.UserRole.admin);
 
@@ -192,12 +192,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.1.1
+     * TEST ID : 6.1
      *
      * Test if the issues can be sorted by the name
      */
     @Test
-    public void testSortingIssuesByTitle() {
+    public void successfulIssueSortByTitleTest() {
         final List<Issue> issues = issuesResource.getIssues("title");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
@@ -206,12 +206,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.2.1
+     * TEST ID : 6.2
      *
      * Test if the issues can be sorted by the description
      */
     @Test
-    public void testSortIssuesByDescription() {
+    public void successfulIssueSortByDescriptionTest() {
         final List<Issue> issues = issuesResource.getIssues("description");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
@@ -220,12 +220,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 6.3.1
+     * TEST ID : 6.3
      *
      * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
      */
     @Test
-    public void testSortIssuesByPriority() {
+    public void successfulIssueSortByPriorityTest() {
         forumPostsResource.getForumPosts();
 
         final ForumPost post1 = forumPostsResource.getForumPost(1L);
@@ -258,12 +258,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.1.1
+     * TEST ID : 12.1
      *
      * Test if an admin can mark an issue as resolved
      */
     @Test
-    public void testIfAdminCanMarkAnIssueAsResolved() {
+    public void successfulMarkingIssueAsResolvedByAdminTest() {
         final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
@@ -274,12 +274,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.2.1
+     * TEST ID : 12.2
      *
      * Test if a developer who is assigned to an issue can mark it as resolved
      */
     @Test
-    public void testIfDeveloperAssignedToAnIssueCanMarkItAsResolved() {
+    public void successfulDeveloperMarkingAssignedIssueAsResolvedTest() {
         final User devAssigned = usersResource.getUser(USER_ID_DEV_1);
         final User admin = usersResource.getUser(USER_ID_ADMIN);
 
@@ -299,12 +299,12 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID : 12.3.1
+     * TEST ID : 12.3
      *
      * Test if a developer who is not assigned to an issue can mark it as resolved
      */
     @Test(expected = WebApplicationException.class)
-    public void testIfDeveloperNotAssignedToAnIssueCanMarkItAsResolved() {
+    public void unsuccessfulDevelopedMarkingUnassignedIssueAsResolvedTest() {
         final User devUnassigned = usersResource.getUser(USER_ID_DEV_2);
         final User admin = usersResource.getUser(USER_ID_ADMIN);
 
