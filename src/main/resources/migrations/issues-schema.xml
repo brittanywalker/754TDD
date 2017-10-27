@@ -31,4 +31,13 @@
             <column name="updated" type="TIMESTAMP"/>
         </createTable>
     </changeSet>
+
+    <changeSet author="sudara.fernando" id="add-priority">
+        <addColumn
+                schemaName="public"
+                tableName="issues">
+            <column name="priority" type="INT">
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

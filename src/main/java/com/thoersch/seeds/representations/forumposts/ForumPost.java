@@ -10,32 +10,41 @@ import java.util.Date;
  * Created by Mira on 23/10/2017.
  */
 
-@Entity
-@Table(name = "forumPosts")
+@javax.persistence.Entity
+@Table(name = "forumposts")
 public class ForumPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long _id;
 
     @NotNull
+    @Column(name = "forum_details_id")
     private Integer _forum_details_id;
 
     @NotNull
+    @Column(name = "text")
     private String _text;
 
+    @Column(name = "date")
     private Date _date;
 
     @NotNull
     @Length(max = 256)
+    @Column(name = "author")
     private String _author;
 
     @NotNull
+    @Column(name = "content")
     private String _content;
 
     @NotNull
     @Length(max = 256)
+    @Column(name = "url")
     private String _url;
+
+    public ForumPost() { }
 
     public ForumPost(Integer forum_details_id, String text, Date date, String author, String content, String url) {
         _forum_details_id = forum_details_id;
@@ -96,5 +105,10 @@ public class ForumPost {
 
     public void set_content(String _content) {
         this._content = _content;
+    }
+
+    @Override
+    public String toString() {
+        return "ForumPost id " + this._id;
     }
 }
