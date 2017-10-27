@@ -16,6 +16,7 @@ import com.thoersch.seeds.resources.users.UsersResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.HttpStatus;
@@ -46,9 +47,9 @@ public class IssuesTest {
     private static final Long USER_ID_DEV_1 = 1L;
     private static final Long USER_ID_DEV_2 = 3L;
 
-    private static final Long ISSUE_01 = 1L;
-    private static final Long ISSUE_02 = 2L;
-    private static final Long ISSUE_03 = 3L;
+    private static final Long ISSUE_ID_01 = 1L;
+    private static final Long ISSUE_ID_02 = 2L;
+    private static final Long ISSUE_ID_03 = 3L;
 
     @SuppressWarnings("WeakerAccess")
     protected static final String DATA_SET = "classpath:issue-items.xml";
@@ -59,52 +60,47 @@ public class IssuesTest {
     @Autowired
     private UsersRepository usersRepository;
 
-    private IssuesResource issuesResourceMock;
-    private UsersResource usersResourceMock;
-    private IssuesUsersResource issuesUsersResourceMock;
+    private IssuesResource issuesResource;
+    private UsersResource usersResource;
+    private IssuesUsersResource issuesUsersResource;
 
     @Before
     public void init() {
-        this.issuesResourceMock = new IssuesResource(issuesRepository);
-        this.usersResourceMock = new UsersResource(usersRepository);
-        this.issuesUsersResourceMock = new IssuesUsersResource(issuesRepository, usersRepository);
-    }
-
-    @Test
-    public void testIfSummeryOfIssueIsGenerated() {
-        final Issue issue = issuesResourceMock.getIssue(1);
-        assertNotNull(issue.getDescription());
+        this.issuesResource = new IssuesResource(issuesRepository);
+        this.usersResource = new UsersResource(usersRepository);
+        this.issuesUsersResource = new IssuesUsersResource(issuesRepository, usersRepository);
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 5.1.1
      *
      * Tests if the issue summery is less than 1000 characters
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIfSummeryOfIssueIsNotLengthy() {
-        final Issue issue = issuesResourceMock.getIssue(1);
+        final Issue issue = Mockito.spy(new Issue());
         final StringBuilder builder = new StringBuilder("_TEST_");
         for (int i = 0; i < 100; i++) {
             builder.append("_test_|_test_");
         }
 
+        assertTrue(builder.toString().length() > 1000);
         issue.setDescription(builder.toString());
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 5.1.2
      *
      * Tests if the issue summery is not empty
      */
     @Test(expected = IllegalArgumentException.class)
     public void testIfSummeryOfIssueIsTooSmall() {
-        final Issue issue = new Issue();
+        final Issue issue = Mockito.spy(new Issue());
         issue.setDescription("");
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 5.2.1
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as completed
@@ -112,14 +108,14 @@ public class IssuesTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddAssigneeWhenIssueIsCompleted() {
         final Issue issue = new Issue();
-        User assignee = usersResourceMock.getUser(1);
-        User admin = usersResourceMock.getUser(2);
+        User assignee = usersResource.getUser(1);
+        User admin = usersResource.getUser(2);
         issue.setStatus(Issue.IssueStatus.COMPLETED);
         issue.addAssignee(assignee, admin);
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 5.3.1
      *
      * Tests if assignees cannot be added when the issue is already
      * marked as rejected
@@ -127,43 +123,55 @@ public class IssuesTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddAssigneeWhenIssueIsRejected() {
         final Issue issue = new Issue();
-        User assignee = usersResourceMock.getUser(1);
-        User admin = usersResourceMock.getUser(2);
+        User assignee = usersResource.getUser(1);
+        User admin = usersResource.getUser(2);
         issue.setStatus(Issue.IssueStatus.REJECTED);
         issue.addAssignee(assignee, admin);
     }
 
+    /**
+     * TEST ID : 5.4.1
+     *
+     * Tests if admin users can add new assignees for an issue
+     */
     @Test
     public void testAddAssigneeAsAnAdmin() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_01);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_01);
         issue.setStatus(Issue.IssueStatus.PENDING);
 
-        final User dev = usersResourceMock.getUser(USER_ID_DEV_1);
+        final User dev = usersResource.getUser(USER_ID_DEV_1);
         assertTrue(dev.getRole() == User.UserRole.developer);
 
         final IssueAssignForm form = new IssueAssignForm(dev.getId(), admin.getId(), issue.getId());
-        issuesUsersResourceMock.assignIssue(form);
+        issuesUsersResource.assignIssue(form);
 
-        assertTrue(issuesUsersResourceMock.getAssignees(issue.getId()).contains(dev));
+        assertTrue(issuesUsersResource.getAssignees(issue.getId()).contains(dev));
     }
 
+    /**
+     * TEST ID : 5.5.1
+     *
+     * Tests if developer can add new assignees for an issue.
+     * This test should fail since developers are not allowed to add new
+     * assignees
+     */
     @Test(expected = WebApplicationException.class)
     public void testAddAssigneeAsADeveloper() {
-        final User dev1 = usersResourceMock.getUser(USER_ID_DEV_1);
+        final User dev1 = usersResource.getUser(USER_ID_DEV_1);
         assertTrue(dev1.getRole() != User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_01);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_01);
         issue.setStatus(Issue.IssueStatus.PENDING);
 
-        final User dev2 = usersResourceMock.getUser(USER_ID_DEV_1);
+        final User dev2 = usersResource.getUser(USER_ID_DEV_1);
         assertTrue(dev2.getRole() == User.UserRole.developer);
 
         final IssueAssignForm form = new IssueAssignForm(dev2.getId(), dev1.getId(), issue.getId());
         try {
-            issuesUsersResourceMock.assignIssue(form);
+            issuesUsersResource.assignIssue(form);
         } catch (WebApplicationException e) {
             assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
             throw e;
@@ -171,42 +179,13 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID :
-     *
-     */
-    //@Test
-//    public void testAddingNewIssue() {
-//        final Issue issue = new Issue();
-//        issue.setId(10L);
-//        issue.setTitle("New Testing issue");
-//        issue.setDescription("New Issue");
-//        issue.setStatus(Issue.IssueStatus.COMPLETED);
-//        issuesResourceMock.saveIssue(issue);
-//    }
-
-    /**
-     * TEST ID :
-     *
-     * Test if all the issues can be retrieved from the system
-     */
-    @Test
-    public void testGettingAllIssues() {
-        final List<Issue> issues = issuesResourceMock.getIssues();
-        assertTrue(!issues.isEmpty());
-        assertNotNull(issues.get(0));
-
-        final Issue issue = issues.get(0);
-        //assertEquals(1, issue.getId());
-    }
-
-    /**
-     * TEST ID :
+     * TEST ID : 6.1.1
      *
      * Test if the issues can be sorted by the name
      */
     @Test
     public void testSortingIssuesByTitle() {
-        final List<Issue> issues = issuesResourceMock.getIssues("title");
+        final List<Issue> issues = issuesResource.getIssues("title");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -214,13 +193,13 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 6.2.1
      *
      * Test if the issues can be sorted by the description
      */
     @Test
     public void testSortIssuesByDescription() {
-        final List<Issue> issues = issuesResourceMock.getIssues("description");
+        final List<Issue> issues = issuesResource.getIssues("description");
         assertTrue(!issues.isEmpty());
         assertNotNull(issues.get(0));
 
@@ -228,67 +207,77 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 6.3.1
+     *
+     * Test if the issues can be sorted by the priority (i.e according to the number of forum posts)
+     */
+    @Test
+    public void testSortIssuesByPriority() {
+        //I am still working on this in IssueAdditions branch
+    }
+
+    /**
+     * TEST ID : 12.1.1
      *
      * Test if an admin can mark an issue as resolved
      */
     @Test
     public void testIfAdminCanMarkAnIssueAsResolved() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, ISSUE_01, "completed");
+        ResponseEntity response = issuesResource.changeIssueStatus(admin, ISSUE_ID_01, "completed");
 
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
         assertEquals(response.getBody().toString(), "IssueID: 1  was marked as COMPLETED");
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.2.1
      *
      * Test if a developer who is assigned to an issue can mark it as resolved
      */
     @Test
     public void testIfDeveloperAssignedToAnIssueCanMarkItAsResolved() {
-        final User devAssigned = usersResourceMock.getUser(USER_ID_DEV_1);
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User devAssigned = usersResource.getUser(USER_ID_DEV_1);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
 
         assertTrue(admin.getRole() == User.UserRole.admin);
 
         //Assign the user first
-        Issue issue = issuesRepository.findOne(ISSUE_02);
+        Issue issue = issuesRepository.findOne(ISSUE_ID_02);
         final IssueAssignForm form = new IssueAssignForm(devAssigned.getId(), admin.getId(), issue.getId());
-        issuesUsersResourceMock.assignIssue(form);
+        issuesUsersResource.assignIssue(form);
 
         //Get the issue and check if he is assigned
-        assertTrue(issuesUsersResourceMock.getAssignees(issue.getId()).contains(devAssigned));
+        assertTrue(issuesUsersResource.getAssignees(issue.getId()).contains(devAssigned));
 
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(devAssigned, issue.getId(), "completed");
+        ResponseEntity response = issuesResource.changeIssueStatus(devAssigned, issue.getId(), "completed");
 
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.3.1
      *
      * Test if a developer who is not assigned to an issue can mark it as resolved
      */
     @Test(expected = WebApplicationException.class)
     public void testIfDeveloperNotAssignedToAnIssueCanMarkItAsResolved() {
-        final User devUnassigned = usersResourceMock.getUser(USER_ID_DEV_2);
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User devUnassigned = usersResource.getUser(USER_ID_DEV_2);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
 
         assertTrue(admin.getRole() == User.UserRole.admin);
 
         //Un-assign if the user is already assigned
-        Issue issue = issuesRepository.findOne(ISSUE_03);
+        Issue issue = issuesRepository.findOne(ISSUE_ID_03);
         final IssueAssignForm form = new IssueAssignForm(devUnassigned.getId(), admin.getId(), issue.getId());
-        issuesUsersResourceMock.removeIssue(form);
+        issuesUsersResource.removeIssue(form);
 
-        assertTrue(!issuesUsersResourceMock.getAssignees(issue.getId()).contains(devUnassigned));
+        assertTrue(!issuesUsersResource.getAssignees(issue.getId()).contains(devUnassigned));
 
         try {
-            issuesResourceMock.changeIssueStatus(devUnassigned, issue.getId(), "completed");
+            issuesResource.changeIssueStatus(devUnassigned, issue.getId(), "completed");
         } catch (WebApplicationException e) {
             assertEquals(e.getResponse().getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
             throw e;
@@ -296,72 +285,72 @@ public class IssuesTest {
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.4.1
      *
      * Test if the issue status can be changed to rejected
      */
     @Test
     public void testIfIssueStatusCanBeChangedToRejected() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_03);
 
         //Check rejected
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "rejected");
+        ResponseEntity response = issuesResource.changeIssueStatus(admin, issue.getId(), "rejected");
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.4.2
      *
      * Test if the issue status can be changed to pending
      */
     @Test
     public void testIfIssueStatusCanBeChangedToPending() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_03);
 
         //Check pending
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "pending");
+        ResponseEntity response = issuesResource.changeIssueStatus(admin, issue.getId(), "pending");
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.4.3
      *
      * Test if the issue status can be changed to assigned
      */
     @Test
     public void testIfIssueStatusCanBeChangedToAssigned() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_03);
 
         //Check assigned
-        ResponseEntity response = issuesResourceMock.changeIssueStatus(admin, issue.getId(), "assigned");
+        ResponseEntity response = issuesResource.changeIssueStatus(admin, issue.getId(), "assigned");
         assertEquals(response.getStatusCode().value(), HttpStatus.ACCEPTED.value());
     }
 
     /**
-     * TEST ID :
+     * TEST ID : 12.4.4
      *
      * Test if the issue status can not be changed to an invalid status
      * Only supported status are PENDING, ASSIGNED, COMPLETED, REJECTED
      */
     @Test(expected = WebApplicationException.class)
     public void testInvalidIssueStatus() {
-        final User admin = usersResourceMock.getUser(USER_ID_ADMIN);
+        final User admin = usersResource.getUser(USER_ID_ADMIN);
         assertTrue(admin.getRole() == User.UserRole.admin);
 
-        final Issue issue = issuesResourceMock.getIssue(ISSUE_03);
+        final Issue issue = issuesResource.getIssue(ISSUE_ID_03);
 
         //Check invalid status
         try {
-            issuesResourceMock.changeIssueStatus(admin, issue.getId(), "invalid");
+            issuesResource.changeIssueStatus(admin, issue.getId(), "invalid");
         } catch (WebApplicationException e) {
             assertEquals(e.getResponse().getStatus(), Response.Status.BAD_REQUEST.getStatusCode());
             throw e;
@@ -374,7 +363,7 @@ public class IssuesTest {
      */
     @Test
     public void testIfNumberOfRelatedPostsAreGreaterThanZero() {
-        final Issue issue = issuesResourceMock.getIssue(1);
+        final Issue issue = issuesResource.getIssue(1);
         assertTrue(issue.getNumberOfRelatedIssues() > 0);
     }
 
