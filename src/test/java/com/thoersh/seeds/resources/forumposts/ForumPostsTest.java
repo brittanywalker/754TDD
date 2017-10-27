@@ -14,7 +14,6 @@ import com.thoersch.seeds.representations.users.User;
 import com.thoersch.seeds.resources.forumposts.ForumPostsResource;
 import com.thoersch.seeds.resources.issues.IssuesPostsResource;
 import com.thoersch.seeds.resources.issues.IssuesResource;
-import com.thoersh.seeds.resources.issues.IssuesTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
