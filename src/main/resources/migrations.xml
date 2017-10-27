@@ -10,7 +10,8 @@
     <include file="migrations/users-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/issues-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/users-issues-schema.xml" relativeToChangelogFile="true"/>
-    <include file="migrations/forumposts-issues-schema.xml" relativeToChangelogFile="true"/>
     <include file="migrations/forumposts-schema.xml" relativeToChangelogFile="true"/>
+    <include file="migrations/forumposts-issues-schema.xml" relativeToChangelogFile="true"/>
+
     <include file="migrations/content/example-seed-data.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
